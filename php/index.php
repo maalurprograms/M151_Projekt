@@ -26,7 +26,7 @@ if (angemeldet()) {
 	$flist = getValue('cfg_func_member');
 	if (!count($flist)) die("cfg_func_member nicht definiert!");
 	// Das Menu aufs Hauptmenu setzen (Memberbereich)
-	setValue('menu_titel', 'Hauptmenü');
+//	setValue('menu_titel', 'Hauptmenü');
 	setValue('menu_eintraege', 'cfg_menu_member');
 	setValue('meta_menu', 'cfg_meta_menu_member');
 } else {
@@ -34,7 +34,7 @@ if (angemeldet()) {
 	$flist = getValue('cfg_func_login');
 	if (!count($flist)) die("cfg_func_login nicht definiert!");
 	// Das Menu aufs Loginmenu setzen
-	setValue('menu_titel', 'Login-Menü');
+//	setValue('menu_titel', 'Login-Menü');
 	setValue('menu_eintraege', 'cfg_menu_login');
 	setValue('meta_menu', 'cfg_meta_menu_login');
 }

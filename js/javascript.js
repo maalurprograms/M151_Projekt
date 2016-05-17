@@ -4,3 +4,5 @@ function confdel(item) {
     answer=confirm("Möchten Sie " + item + " wirklich löschen?");
     return answer;
 }
+
+//Dropdown:

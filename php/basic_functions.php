@@ -98,19 +98,19 @@ function getMenu($mlist, $title="") {
         $active_link = getId();
         if (empty($active_link)) $active_link=key($mlist);
         $printmenu = "<table border='0' class='table_menu'>\n";
-        if (!empty($title)) $printmenu .= "<tr><th align='left'>$title</th></tr>\n";
+//        if (!empty($title)) $printmenu .= "<tr><th align='left'>$title</th></tr>\n";
 		if ($loginMenu) {
 			foreach ($mlist as $index=>$value) {
 				if ($index == $active_link) $active = "id='active'";
 				else $active = "";
-				$printmenu .= "<tr><td nowrap><a class='link_menu' $active href='".$_SERVER['PHP_SELF']."?id=$index'>$value</a></td></tr>\n";
+				$printmenu .= "<td nowrap><a class='link_menu' $active href='".$_SERVER['PHP_SELF']."?id=$index'>$value</a></td>\n";
 			}
 		} else {
 			$menuEntry = getValue('cfg_menu_level_member');
 			foreach ($mlist as $index=>$value) {
 				if ($index == $active_link) $active = "id='active'";
 				else $active = "";
-				$printmenu .= "<tr><td nowrap><a class='link_menu' $active href='".$_SERVER['PHP_SELF']."?id=$index'>$value</a></td></tr>\n";
+				$printmenu .= "<td nowrap><a class='link_menu' $active href='".$_SERVER['PHP_SELF']."?id=$index'>$value</a></td>\n";
 			}
         }
         $printmenu .= "</table>\n";
@@ -163,7 +163,10 @@ function setSessionValue($key, $value) {
  *
  */
 function getSessionValue($key) {
-	if (isset($_SESSION[$key])) return $_SESSION[$key];
+	if (isset($_SESSION[$key])){
+		return $_SESSION[$key];
+		//unset($_SESSION[$key]);
+	}
 	else return "";
 }
 

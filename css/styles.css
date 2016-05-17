@@ -1,25 +1,50 @@
 /* CSS Document */
 
-body { font-family: Verdana, Arial, Helvetica, sans-serif; font-size:12px; color:#000000; line-height:20px; margin:0 }
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#000000;
+	line-height:20px;
+	padding-top: 100px;
+}
 
 .wb { color:#FFFFFF; font-weight:bold }
-.wb10 { color:#FFFFFF; font-weight:bold; font-size:10px }
+.wb10 { color:black; font-weight:bold; font-size:15px }
 
-.header {background-color: #550000; text-align: right; padding-right: 10px }
-.footer {background-color: #550000; text-align: center}
+.header {
+	background-color: white;
+	text-align: right;
+	padding-right: 10px;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+.footer {
+	background-color: white;
+	text-align: center;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
 
-#topimg { background:url(../images/foto-top.png) }
+/*#topimg { background:url(../images/foto-top.png) }*/
 
-td.nav { background-color: #550000 }
-table, th, td { border: 0px solid black; }
-table.top { background-color: #ffffff }
-table.table_menu { width: 192px; border-spacing: 1px }
+td.nav {
+	background-color: white;
+	height: auto;
+}
+/*table, th, td { border: 0px solid black; }*/
+
+/*table.top {*/
+	/*!*background-color: #ffffff;*!*/
+	/*!*border-radius: 10px;*!*/
+/*}*/
+
+table.table_menu { width: 150px; border-spacing: 1px }
 table.table_menu th { background-color: #990000; color: #cccccc; text-align: center }
 table.table_menu td { padding: 0px }
 
-td.content { border-right-style:solid;
-            border-right-width:5px;
-            border-right-color:#550000 }
+/*td.content { border-right-style:solid;*/
+            /*border-right-width:5px;*/
+            /*border-right-color:white }*/
 
 form { margin:0 }
 .label { color:#000000; font-weight:bold }
@@ -31,49 +56,185 @@ input.err { background-color:#ff8888; color:#000000 }
 
 a:link, a:visited {
 	font-size: 12px;
-	font-weight: bold;	
+	font-weight: bold;
 	color:#990000;
-	text-decoration: none;	
+	text-decoration: none;
 }
 a:hover, a:active {
 	font-size: 12px;
-	font-weight: bold;	
+	font-weight: bold;
 	color:#ff6600;
-	text-decoration: none;	
+	text-decoration: none;
 }
 a.link_menu:link, a.link_menu:visited {
     display: block;
-	background-color: #ff5500;
+	background-color: white;
 	vertical-align: middle;
 	font-size: 11px;
-	font-weight: bold;	
+	font-weight: bold;
 	color:#444444;
-	text-decoration: none;	
-	text-align: left;
+	text-decoration: none;
+	text-align: center;
 	padding-top: 2px;
-	padding-left: 20px;
 	height: 23px;
-	width: 171px;
+	width: 120px;
 }
 a.link_menu:hover {
     display: block;
-	background-color: #ff7700;
-	color:#ffffff;
+	color: lightblue;
 	font-weight: bold;
 }
 a.link_menu#active {
     display: block;
-	background-color: #ee0000;
-	color:#ffffff;
+	background-color: lightblue;
 	font-weight: bold;
 }
 a.meta_menu:link, a.meta_menu:visited {
-  color: #999999;
-  font-weight:bold;
-  text-decoration: none;
+  	color: black;
+  	font-weight:bold;
+  	text-decoration: none;
 }
 a.meta_menu:hover, a.meta_menu:active {
-  color: #ffffff;
-  font-weight:bold;
-  text-decoration: none;
+	font-weight:bold;
+	color: lightblue;
+  	text-decoration: none;
 }
+
+/*Bootstrap:*/
+/*
+ * Specific styles of signin component
+ */
+/*
+ * General styles
+ */
+body, html {
+	height: 100%;
+	background-repeat: no-repeat;
+	background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+}
+
+.card-container.card {
+	max-width: 350px;
+	padding: 40px 40px;
+}
+
+.btn {
+	font-weight: 700;
+	height: 36px;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	cursor: default;
+}
+
+/*
+ * Card component
+ */
+.card {
+	background-color: #F7F7F7;
+	/* just in case there no content*/
+	padding: 20px 25px 30px;
+	margin: 0 auto 25px;
+	margin-top: 50px;
+	/* shadows and rounded borders */
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.profile-img-card {
+	width: 96px;
+	height: 96px;
+	margin: 0 auto 10px;
+	display: block;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+
+/*
+ * Form styles
+ */
+.profile-name-card {
+	font-size: 25px;
+	font-weight: bold;
+	text-align: center;
+	margin: 10px 0 0;
+	min-height: 1em;
+}
+
+.reauth-email {
+	display: block;
+	color: #404040;
+	line-height: 2;
+	margin-bottom: 10px;
+	font-size: 14px;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.form-signin #inputEmail,
+.form-signin #inputVorname,
+.form-signin #inputNachname,
+.form-signin #inputPassword,
+.form-signin #inputPassword2 {
+	direction: ltr;
+	height: 44px;
+	font-size: 16px;
+}
+
+.form-signin input[type=email],
+.form-signin input[type=password],
+.form-signin input[type=text],
+.form-signin button {
+	width: 100%;
+	display: block;
+	margin-bottom: 10px;
+	z-index: 1;
+	position: relative;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+	border-color: rgb(104, 145, 162);
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+.btn.btn-signin {
+	/*background-color: #4d90fe; */
+	background-color: rgb(104, 145, 162);
+	/* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
+	color: white;
+	padding: 0px;
+	font-weight: 700;
+	font-size: 14px;
+	height: 36px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	border: none;
+	-o-transition: all 0.218s;
+	-moz-transition: all 0.218s;
+	-webkit-transition: all 0.218s;
+	transition: all 0.218s;
+}
+
+.btn.btn-signin:hover,
+.btn.btn-signin:active,
+.btn.btn-signin:focus {
+	background-color: rgb(12, 97, 33);
+}
+
+/*Dropdown: */
