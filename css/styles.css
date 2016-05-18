@@ -18,33 +18,13 @@ body {
 	border-top-right-radius: 5px;
 	border-bottom-right-radius: 5px;
 }
-.footer {
-	background-color: white;
-	text-align: center;
-	border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
-}
-
-/*#topimg { background:url(../images/foto-top.png) }*/
 
 td.nav {
 	background-color: white;
 	height: auto;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
 }
-/*table, th, td { border: 0px solid black; }*/
-
-/*table.top {*/
-	/*!*background-color: #ffffff;*!*/
-	/*!*border-radius: 10px;*!*/
-/*}*/
-
-table.table_menu { width: 150px; border-spacing: 1px }
-table.table_menu th { background-color: #990000; color: #cccccc; text-align: center }
-table.table_menu td { padding: 0px }
-
-/*td.content { border-right-style:solid;*/
-            /*border-right-width:5px;*/
-            /*border-right-color:white }*/
 
 form { margin:0 }
 .label { color:#000000; font-weight:bold }
@@ -54,18 +34,6 @@ form { margin:0 }
 input.txt, select { background-color: #dddddd; color:#000000 }
 input.err { background-color:#ff8888; color:#000000 }
 
-a:link, a:visited {
-	font-size: 12px;
-	font-weight: bold;
-	color:#990000;
-	text-decoration: none;
-}
-a:hover, a:active {
-	font-size: 12px;
-	font-weight: bold;
-	color:#ff6600;
-	text-decoration: none;
-}
 a.link_menu:link, a.link_menu:visited {
     display: block;
 	background-color: white;
@@ -88,7 +56,10 @@ a.link_menu#active {
     display: block;
 	background-color: lightblue;
 	font-weight: bold;
+	border-radius: 5px;
 }
+
+/*abmelden und user*/
 a.meta_menu:link, a.meta_menu:visited {
   	color: black;
   	font-weight:bold;
@@ -101,12 +72,7 @@ a.meta_menu:hover, a.meta_menu:active {
 }
 
 /*Bootstrap:*/
-/*
- * Specific styles of signin component
- */
-/*
- * General styles
- */
+
 body, html {
 	height: 100%;
 	background-repeat: no-repeat;
