@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css"/>
-		<script src="../js/jscript.js"></script>
+		<script src="../js/javascript.js"></script>
 		<title>Bilderdatenbank</title>
 	</head>
 	<body>
