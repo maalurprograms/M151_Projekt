@@ -29,7 +29,7 @@ td.nav {
 form { margin:0 }
 .label { color:#000000; font-weight:bold }
 .fehler { color: red; font-weight:bold; padding-left: 5px }
-.meldung { color: #550000; font-weight:bold; padding-left: 5px }
+.meldung { color: #000000; font-weight:bold; padding-left: 5px }
 
 input.txt, select { background-color: #dddddd; color:#000000 }
 input.err { background-color:#ff8888; color:#000000 }

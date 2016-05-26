@@ -1,7 +1,7 @@
 <?php
 /*
  *  @autor Michael Abplanalp
- *  @version 1.0
+ *  @version 1.jpg.0
  *
  *  Dieses Modul definert alle Konfigurationsparameter und stellt die DB-Verbindung her.
  */

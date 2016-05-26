@@ -1,7 +1,7 @@
 <?php
 /*
  *  @autor Michael Abplanalp
- *  @version 1.0
+ *  @version 1.jpg.0
  *
  *  Dieses Modul beinhaltet Funktionen, welche die Anwendungslogik implementieren.
  *
@@ -41,6 +41,10 @@ function album() {
  * Beinhaltet die Anwendungslogik zum Hinzufügen von Fotos zu einem Album
  */
 function fotos() {
+	if (isset($_REQUEST['senden'])) {
+		setValue('css_class_meldung',"meldung");
+		setValue('meldung', "Funktion ausgeführt");
+	}
     // Template abfüllen und Resultat zurückgeben
     setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
     return runTemplate( "../templates/fotos.htm.php" );

@@ -1,7 +1,7 @@
  <?php
 /*
  *  @autor Michael Abplanalp
- *  @version 1.0
+ *  @version 1.jpg.0
  * 
  *  Ausschliessliche dieses Modul wird über die URL aufgerufen. Je nach übergebenem
  *  Parameter "id" wird die entsprechende Funktion ausgeführt. Am Schluss wird das

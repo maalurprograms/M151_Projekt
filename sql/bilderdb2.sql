@@ -4,7 +4,7 @@
 --
 -- Host: localhost
 -- Erstellungszeit: 21. Mai 2016 um 09:38
--- Server-Version: 10.1.13-MariaDB
+-- Server-Version: 10.1.jpg.13-MariaDB
 -- PHP-Version: 5.6.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";

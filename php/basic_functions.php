@@ -256,10 +256,10 @@ function CheckName($value, $empty='N') {
 /**
  * Prüft, ob ein Passwort korrekt ist oder nicht. Das Pattern:
  *  - Die Länge muss 8-20 Zeichen sein
- *  - Es muss mind. 1 Ziffer enthalten sein (?=.*\d)
- *  - Es muss min. 1 Kleinbuchstabe enthalten sein (?=.*[a-z])
- *  - Es muss min. 1 Grossbuchstabe enthalten sein(?=.*[A-Z])
- *  - Es muss min. 1 Sonderzeichen enthalten sein (\W = Alle Zeichen ausser Ziffern und Buschstaben und "_")
+ *  - Es muss mind. 1.jpg Ziffer enthalten sein (?=.*\d)
+ *  - Es muss min. 1.jpg Kleinbuchstabe enthalten sein (?=.*[a-z])
+ *  - Es muss min. 1.jpg Grossbuchstabe enthalten sein(?=.*[A-Z])
+ *  - Es muss min. 1.jpg Sonderzeichen enthalten sein (\W = Alle Zeichen ausser Ziffern und Buschstaben und "_")
  *
  * @param   $value      Eingabewert
  */

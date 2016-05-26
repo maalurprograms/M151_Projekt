@@ -2,7 +2,7 @@
 -- version 4.4.14
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
+-- Host: 127.0.0.1.jpg
 -- Erstellungszeit: 22. Apr 2016 um 15:02
 -- Server-Version: 5.6.26
 -- PHP-Version: 5.6.12

@@ -1,7 +1,7 @@
 <?php
 /*
  *  @autor Michael Abplanalp
- *  @version 1.0
+ *  @version 1.jpg.0
  *
  *  Dieses Modul beinhaltet Funktionen, welche die Logik zur Authentifizierung implementieren.
  *
@@ -118,7 +118,7 @@ function checkRegistration() {
  * Prüft die Authorisierung eines Benutzers und gibt die Id zurück, falls erfolgreich
  */
 function checkLoginGetId() { 
-	// E-Mail ist ein Unique-Attribut in der DB, deshalb gibt Abfrage max. 1 Datensatz zurück
+	// E-Mail ist ein Unique-Attribut in der DB, deshalb gibt Abfrage max. 1.jpg Datensatz zurück
 	$resultat = getBenutzerDaten($_REQUEST['email']);
 	if (empty($resultat)) {
 		return 0;
