@@ -24,16 +24,17 @@ function db_insert_benutzer($params, $passwort) {
 }
 
 function db_albums(){
-    $sql = "select * from gallerie";
-    return sqlSelect($sql);
+    return sqlSelect("select * from gallerie");
 }
 
 function db_photos_from_gallery($galleryId){
-    $sql = "select * from fotos JOIN gallerie on fotos.idg=gallerie.gid WHERE gallerie.gid = $galleryId";
-    return sqlSelect($sql);
+    return sqlSelect("select * from fotos JOIN gallerie on fotos.idg=gallerie.gid WHERE gallerie.gid = $galleryId");
 }
 
 function db_galleries_from_benutzer($benutzerId){
-    $sql = "select * from gallerie JOIN benutzer on gallerie.idb=benutzer.bid where benutzer.bid = $benutzerId";
-    return sqlSelect($sql);
+    return sqlSelect("select * from gallerie JOIN benutzer on gallerie.idb=benutzer.bid where benutzer.bid = $benutzerId");
+}
+
+function db_insert_foto($benutzerId, $galleryId){
+    return sqlQuery("insert into fotos (idb, idg) VALUE ($benutzerId, $galleryId)");
 }

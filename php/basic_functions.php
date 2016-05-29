@@ -200,7 +200,9 @@ function sqlSelect($sql) {
  function sqlQuery($sql) {
 	$result = mysqli_query(getValue('cfg_db'), $sql);
  	if (!$result) die(mysqli_error(getValue('cfg_db'))."<pre>".$sql."</pre>");
-}
+//	 Die Id des hinzugefügten elementes zurück geben
+ 	return mysqli_insert_id(getValue('cfg_db'));
+ }
 
 /**
  * Aktives php-Modul noch einmal aufrufen.
