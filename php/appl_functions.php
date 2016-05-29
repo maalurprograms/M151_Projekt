@@ -70,6 +70,7 @@ function fotos() {
 				}
 				
 //				TODO Check what type the image is to convert it to source for imagecopyresampled
+//				http://stackoverflow.com/questions/19708101/determining-file-type-in-php-without-mime-or-extension
 				
 				imagecopyresampled("../images/thumbnails/$bildId", imagecreatefromgif("../images/$bildId") ,0 ,0 ,0 ,0 ,$targetWidth ,$targetHeight ,$originalWidth ,$originalHeight );
 				setValue('css_class_meldung',"meldung");
