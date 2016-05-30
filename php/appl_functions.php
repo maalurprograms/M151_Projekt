@@ -36,30 +36,61 @@ function album() {
     setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
     return runTemplate( "../templates/album.htm.php" );
 }
+// Bennötigt um aus einem Bild ein Source objekt zu generieren das verkleinert werden kann.
+// Gibt das Source Objekt und den Filetyp zurück.
+function convertImageToSource($path){
+	$finfo = new finfo(FILEINFO_MIME);
+	switch (explode(";", $finfo->file($path))[0]){
+		case "image/png":
+			$image_source = imagecreatefrompng($path);
+			break;
+		case "image/jpeg":
+			$image_source = imagecreatefromjpeg($path);
+			break;
+		case "image/gif":
+			$image_source = imagecreatefromgif($path);
+			break;
+	}
+	return array($image_source, explode(";", $finfo->file($path))[0]);
+}
+
+// Konvertiert das Source Objekt zurück in ein Bild.
+function convertSourceToImage($path, $source, $type){
+	switch ($type){
+		case "image/png":
+			imagepng($source, $path);
+			break;
+		case "image/jpeg":
+			imagejpeg($source, $path);
+			break;
+		case "image/gif":
+			imagegif($source, $path);
+			break;
+	}
+}
 
 /*
  * Beinhaltet die Anwendungslogik zum Hinzufügen von Fotos zu einem Album
  */
 function fotos() {
 
-	function getFileType($path){
-		
-	}
-
 	if (isset($_REQUEST['senden'])) {
 //		Wenn eine request an den Server gesendet wurde, verschieben wir das Bild von dem Standart upload Ordner in den Images/tmp Ordner.
 //		Falls dies ein Fehler ergibt, wissen wir das kein File gesendet wurde oder ein anderer Fehler aufgetreten ist.
-		if (move_uploaded_file($_FILES['bild']['tmp_name'], "../images/tmp/".$_FILES["bild"]["name"])) {
+		$tmp_path = "../images/tmp/".$_FILES["bild"]["name"];
+		if (move_uploaded_file($_FILES['bild']['tmp_name'], $tmp_path)) {
 //			Wenn wir die Bild grösse aus dem File lesen können wissen wir das es ein Bild ist.
 //			Falls es kein Bil ist wird ein Fehler ausgegeben.
-			if(getimagesize("../images/tmp/".$_FILES["bild"]["name"])){
+			if(getimagesize($tmp_path)){
 //				Wir erstellen einen DB Eintrag für das Bild und verschieben es von images/tmp nach /images und nun mit der ID als Namen.
 				$bildId = db_insert_foto($_SESSION["benutzerId"], $_POST["gallerieId"]);
-				rename("../images/tmp/".$_FILES["bild"]["name"], "../images/".$bildId);
+				$final_path = "../images/$bildId";
+				$thumbnail_path = "../images/thumbnails/$bildId";
+				rename($tmp_path, $final_path);
 
 //				Um das Bild zu verkleiner müssen wir zuerst das Verhältnis ausrechen. Nach dem wir die gewünschte Grösse
 //				haben copieren wir das bild und schneidem es um. Dafür ist die imagecopyresized() Methode zuständig.
-				list($originalHeight, $originalWidth) = getimagesize("../images/".$bildId);
+				list($originalWidth, $originalHeight) = getimagesize($final_path);
 				$ratio = $originalWidth / $originalHeight;
 				if ($ratio < 1) {
 					$targetHeight = 100;
@@ -68,15 +99,20 @@ function fotos() {
 					$targetWidth = 100;
 					$targetHeight = $targetWidth / $ratio;
 				}
-				
-//				TODO Check what type the image is to convert it to source for imagecopyresampled
-//				http://stackoverflow.com/questions/19708101/determining-file-type-in-php-without-mime-or-extension
-				
-				imagecopyresampled("../images/thumbnails/$bildId", imagecreatefromgif("../images/$bildId") ,0 ,0 ,0 ,0 ,$targetWidth ,$targetHeight ,$originalWidth ,$originalHeight );
+
+//				Das Bild wird in ein Source Objekt konvertiert und danach zugeschnitten und wider umkonvertiert.
+				list($image_source, $image_type) = convertImageToSource($final_path);
+//				Hier wird ein dummy Image erstellt in das wir dann das verkleinerte Bild schreiben
+				$image_thumbnail = imagecreatetruecolor($targetWidth, $targetHeight);
+				imagecopyresampled($image_thumbnail, $image_source ,0 ,0 ,0 ,0 ,$targetWidth ,$targetHeight ,$originalWidth ,$originalHeight );
+//				Hier wird aus $image_thumbnail ein Bild gemacht und gespeichert.
+//				Der Bild Typ ist dabei der selbe wie beim Original.
+				convertSourceToImage($thumbnail_path, $image_thumbnail, $image_type);
+
 				setValue('css_class_meldung',"meldung");
 				setValue('meldung', "Ihr Bild wurde hochgeladen.");
 			} else {
-				unlink("../images/tmp/".$_FILES["bild"]["name"]);
+				unlink($tmp_path);
 				setValue('css_class_meldung',"fehler");
 				setValue('meldung', "Unbekannter Bildtyp.");
 			}
