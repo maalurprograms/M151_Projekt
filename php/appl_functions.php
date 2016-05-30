@@ -36,7 +36,9 @@ function album() {
     setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
     return runTemplate( "../templates/album.htm.php" );
 }
-// Bennötigt um aus einem Bild ein Source objekt zu generieren das verkleinert werden kann.
+
+
+// Thumbnail: Bennötigt um aus einem Bild ein Source objekt zu generieren das verkleinert werden kann.
 // Gibt das Source Objekt und den Filetyp zurück.
 function convertImageToSource($path){
 	$finfo = new finfo(FILEINFO_MIME);
@@ -69,6 +71,29 @@ function convertSourceToImage($path, $source, $type){
 	}
 }
 
+function createThumbnail($final_path, $thumbnail_path){
+// 	Um das Bild zu verkleiner müssen wir zuerst das Verhältnis ausrechen. Nach dem wir die gewünschte Grösse
+// 	haben copieren wir das bild und schneidem es um. Dafür ist die imagecopyresized() Methode zuständig.
+	list($originalWidth, $originalHeight) = getimagesize($final_path);
+	$ratio = $originalWidth / $originalHeight;
+	if ($ratio < 1) {
+		$targetHeight = 100;
+		$targetWidth = $targetHeight * $ratio;
+	} else {
+		$targetWidth = 100;
+		$targetHeight = $targetWidth / $ratio;
+	}
+
+// 	Das Bild wird in ein Source Objekt konvertiert und danach zugeschnitten und wider umkonvertiert.
+	list($image_source, $image_type) = convertImageToSource($final_path);
+//	Hier wird ein dummy Image erstellt in das wir dann das verkleinerte Bild schreiben
+	$image_thumbnail = imagecreatetruecolor($targetWidth, $targetHeight);
+	imagecopyresampled($image_thumbnail, $image_source ,0 ,0 ,0 ,0 ,$targetWidth ,$targetHeight ,$originalWidth ,$originalHeight );
+// 	Hier wird aus $image_thumbnail ein Bild gemacht und gespeichert.
+// 	Der Bild Typ ist dabei der selbe wie beim Original.
+	convertSourceToImage($thumbnail_path, $image_thumbnail, $image_type);
+}
+
 /*
  * Beinhaltet die Anwendungslogik zum Hinzufügen von Fotos zu einem Album
  */
@@ -78,6 +103,7 @@ function fotos() {
 //		Wenn eine request an den Server gesendet wurde, verschieben wir das Bild von dem Standart upload Ordner in den Images/tmp Ordner.
 //		Falls dies ein Fehler ergibt, wissen wir das kein File gesendet wurde oder ein anderer Fehler aufgetreten ist.
 		$tmp_path = "../images/tmp/".$_FILES["bild"]["name"];
+
 		if (move_uploaded_file($_FILES['bild']['tmp_name'], $tmp_path)) {
 //			Wenn wir die Bild grösse aus dem File lesen können wissen wir das es ein Bild ist.
 //			Falls es kein Bil ist wird ein Fehler ausgegeben.
@@ -88,30 +114,35 @@ function fotos() {
 				$thumbnail_path = "../images/thumbnails/$bildId";
 				rename($tmp_path, $final_path);
 
-//				Um das Bild zu verkleiner müssen wir zuerst das Verhältnis ausrechen. Nach dem wir die gewünschte Grösse
-//				haben copieren wir das bild und schneidem es um. Dafür ist die imagecopyresized() Methode zuständig.
-				list($originalWidth, $originalHeight) = getimagesize($final_path);
-				$ratio = $originalWidth / $originalHeight;
-				if ($ratio < 1) {
-					$targetHeight = 100;
-					$targetWidth = $targetHeight * $ratio;
-				} else {
-					$targetWidth = 100;
-					$targetHeight = $targetWidth / $ratio;
-				}
+//				Nun müssen wir noch das Thumbnail erstellen. Das wird in einer eigenen Methode erledigt.
+				createThumbnail($final_path, $thumbnail_path);
 
-//				Das Bild wird in ein Source Objekt konvertiert und danach zugeschnitten und wider umkonvertiert.
-				list($image_source, $image_type) = convertImageToSource($final_path);
-//				Hier wird ein dummy Image erstellt in das wir dann das verkleinerte Bild schreiben
-				$image_thumbnail = imagecreatetruecolor($targetWidth, $targetHeight);
-				imagecopyresampled($image_thumbnail, $image_source ,0 ,0 ,0 ,0 ,$targetWidth ,$targetHeight ,$originalWidth ,$originalHeight );
-//				Hier wird aus $image_thumbnail ein Bild gemacht und gespeichert.
-//				Der Bild Typ ist dabei der selbe wie beim Original.
-				convertSourceToImage($thumbnail_path, $image_thumbnail, $image_type);
+//TAGS:			Jetz müssen wir noch die Tags hinzufügen
+//				Falls nichts oder nur Spaces im Tag Feld steht ignorieren wir es.
+				if(!ctype_space($_POST["tags"]) && $_POST["tags"]){
+//					Die Tags werden aufgeteilt und es wird überprüft ob sie schon in der DB existieren.
+//					Wenn aj wird nur die Verknüpfung von Foto und Tag hinzugefügt. Wenn der Tag noch nicht existiert,
+//					wird er erstellt.
+					$tag_list = explode(";", $_POST["tags"]);
+					foreach ($tag_list as $tag){
+//						TODO Hier macht alles Probleme keine Ahnung was falschläuft.
+//						$db_tagId = db_get_tag($tag)[0]["tid"];
+//
+//						if ($db_tagId == false){
+//							$tagId = db_insert_tag($tag);
+//							print "Erstellt";
+//						} else{
+//							$tagId = $db_tagId;
+//							print "Existiert schon";
+//						}
+//						db_insert_fotos_tag($tagId,$bildId);
+					}
+				}
 
 				setValue('css_class_meldung',"meldung");
 				setValue('meldung', "Ihr Bild wurde hochgeladen.");
 			} else {
+//				Falls die hochgeladene Datei kein Bild ist, wird sie wider aus dem Temporären Verzeichniss gelöscht.
 				unlink($tmp_path);
 				setValue('css_class_meldung',"fehler");
 				setValue('meldung', "Unbekannter Bildtyp.");

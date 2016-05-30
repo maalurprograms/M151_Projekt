@@ -10,6 +10,7 @@
                 }
             ?>
         </select><br>
+        <input type="text" name="tags" placeholder="Tags mit ';' getrennt eingeben."><br>
         <input type="submit" value="Upload Image" name="senden">
     </form>
     <p class="<?php echo getValue('css_class_meldung'); ?>">
