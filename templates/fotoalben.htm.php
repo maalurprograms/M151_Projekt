@@ -13,7 +13,7 @@
 
 
 
-
+//      Das sollte warscheinlich nicht hier sein sonder als value übergeben werden
         if (isset($_REQUEST['senden'])) {
             if(!ctype_space($_POST["search_tags"]) && $_POST["search_tags"]){
                 print "
