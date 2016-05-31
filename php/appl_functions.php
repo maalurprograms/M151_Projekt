@@ -126,16 +126,13 @@ function fotos() {
 					$tag_list = explode(";", $_POST["tags"]);
 					foreach ($tag_list as $tag){
 //						TODO Hier macht alles Probleme keine Ahnung was falschläuft.
-//						$db_tagId = db_get_tag($tag)[0]["tid"];
-//
-//						if ($db_tagId == false){
-//							$tagId = db_insert_tag($tag);
-//							print "Erstellt";
-//						} else{
-//							$tagId = $db_tagId;
-//							print "Existiert schon";
-//						}
-//						db_insert_fotos_tag($tagId,$bildId);
+						$db_tagId = db_get_tagid($tag)[0]["tid"];
+						if (!$db_tagId){
+							$tagId = db_insert_tag($tag);
+						} else{
+							$tagId = $db_tagId;
+						}
+						db_insert_fotos_tag($tagId,$bildId);
 					}
 				}
 
@@ -161,7 +158,7 @@ function fotos() {
  * Prüft, ob der Primary Key "email" in der Tabelle "benutzer" bereits existiert
  */
 function getBenutzerDaten($email) {
-	return db_get_email($email);
+	return db_get_benutzer_from_email($email);
 }
 
 /*
@@ -172,7 +169,7 @@ function getBenutzerName($benutzerId=0) {
 	// Wenn die Benutzer-ID = 0, wird der aktuell angemeldete Benutzer zurückgeliefert
 	if ($benutzerId == 0) $benutzerId = getSessionValue('benutzerId');
 	if ($benutzerId > 0) {
-	  $benutzer = db_get_benutzer($benutzerId);
+	  $benutzer = db_get_benutzer_from_id($benutzerId);
 	  if (count($benutzer)) {
 		// Falls Vorname und/oder Nachname vorhanden: diese Werte holen
 		if (strlen($benutzer[0]['vorname']) > 0 || strlen($benutzer[0]['nachname']) > 0) $benutzerName = trim($benutzer[0]['vorname']." ".$benutzer[0]['nachname']);

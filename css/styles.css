@@ -18,22 +18,6 @@ body {
 	width: 80%;
 }
 
-/*Picture zoom*/
-.pic{
-width:50px;
-height:50px;
-}
-.picbig{
-position: absolute;
-width:0px;
--webkit-transition:width 0.3s linear 0s;
-transition:width 0.3s linear 0s;
-z-index:10;
-}
-.pic:hover + .picbig{
-width:1000px;
-}
-
 .fehler { color: red; font-weight:bold; padding-left: 5px }
 .meldung { color: #000000; font-weight:bold; padding-left: 5px }
 
@@ -74,9 +58,52 @@ a.meta_menu:hover, a.meta_menu:active {
   	text-decoration: none;
 }
 
+/* Alben darstellung*/
+.alben {
+	width: 90%;
+}
 
+.album, .search_result_album{
+	width: auto;
+	margin-bottom: 50px;
+	border-left: 3px solid;
+	border-right: 3px solid;
+	border-color: lightblue;
+}
 
-/*Bootstrap:*/
+.album p, .search_result_album p{
+	font-size: 20px;
+}
+
+.album img, .search_result_album img{
+	margin: 0 5px;
+	border: 3px solid transparent;
+	border-radius: 3px;
+}
+
+.album img:hover, .search_result_album img:hover{
+	border-color: lightblue;
+}
+
+.zoom_img{
+	width: 100%;
+}
+
+.close_icon{
+	width: 50px;
+}
+
+#search {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.search_button {
+	width: 30px;
+}
+
+/*Bootstrap von Login und Register:*/
 
 body, html {
 	height: 100%;

@@ -188,8 +188,12 @@ function sqlSelect($sql) {
 	$data = "";
  	$result = mysqli_query(getValue('cfg_db'), $sql);
  	if (!$result ) die("Fehler: ".mysqli_error());
- 	while ($row=mysqli_fetch_assoc($result)) $data[]=$row;
-	return $data;
+	if ($result->num_rows === 0){
+		return false;
+	} else {
+		while ($row = mysqli_fetch_assoc($result)) $data[] = $row;
+		return $data;
+	}
 }
 
 /**

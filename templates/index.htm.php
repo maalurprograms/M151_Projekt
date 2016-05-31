@@ -2,12 +2,7 @@
 <html lang="de">
 	<head>
 		<meta charset="utf-8"/>
-<!--		Photoswipe imports:-->
-		<link rel="stylesheet" href="../css/photoswipe/photoswipe.css">
-		<link rel="stylesheet" href="../css/photoswipe/default-skin.css">
-		<script src="../js/photoswipe/photoswipe.min.js"></script>
-		<script src="../js/photoswipe/photoswipe-ui-default.min.js"></script>
-
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css"/>
 		<script src="../js/javascript.js"></script>
 		<title>Bilderdatenbank</title>
@@ -20,7 +15,7 @@
 						<?php echo getMenu(getValue(getValue('menu_eintraege')), getValue('menu_titel')); ?>
 					</td>
 					<td class="header" height="20" colspan="2">
-					<?php echo getMetaMenu(getValue(getValue('meta_menu'))); ?>
+						<?php echo getMetaMenu(getValue(getValue('meta_menu'))); ?>
 					</td>
 				</tr>
 			</table>

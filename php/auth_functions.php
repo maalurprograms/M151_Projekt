@@ -84,7 +84,7 @@ function logout() {
  *
  */
 function emailExists($email) {
-	$resultat = db_get_email($email);
+	$resultat = db_get_benutzer_from_email($email);
 	if (empty($resultat)) return false;
 	else return true;
 }

@@ -26,7 +26,6 @@ if (angemeldet()) {
 	$flist = getValue('cfg_func_member');
 	if (!count($flist)) die("cfg_func_member nicht definiert!");
 	// Das Menu aufs Hauptmenu setzen (Memberbereich)
-//	setValue('menu_titel', 'Hauptmenü');
 	setValue('menu_eintraege', 'cfg_menu_member');
 	setValue('meta_menu', 'cfg_meta_menu_member');
 } else {
