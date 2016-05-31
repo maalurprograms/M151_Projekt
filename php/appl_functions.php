@@ -32,6 +32,21 @@ function fotoalben() {
  * Beinhaltet die Anwendungslogik zum Hinzufügen eines Fotoalbums
  */
 function album() {
+	if (isset($_REQUEST['senden'])) {
+		if(!ctype_space($_POST["name"]) && $_POST["name"]){
+//			Wenn der Name nicht leer ist, wird geschaut ob es ein Album mit exakt diesem Namen schon gibt.
+//			Wenn ja dann wird ausgegeben das das Album schon existiert.
+//			Ansonsten wird es erstellt.
+			if (!db_get_album_by_name($_POST["name"])){
+				db_insert_album($_POST["name"], $_SESSION["benutzerId"]);
+				setValue('css_class_meldung',"meldung");
+				setValue('meldung', "Das Album wurde erstellt.");
+			} else{
+				setValue('css_class_meldung',"fehler");
+				setValue('meldung', "Dieses Album existiert bereits.");
+			}
+		}
+	}
     // Template abfüllen und Resultat zurückgeben
     setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
     return runTemplate( "../templates/album.htm.php" );
@@ -99,7 +114,7 @@ function createThumbnail($final_path, $thumbnail_path){
  */
 function fotos() {
 
-	if (isset($_REQUEST['senden'])) {
+	if (isset($_REQUEST['senden_suche'])) {
 //		Wenn eine request an den Server gesendet wurde, verschieben wir das Bild von dem Standart upload Ordner in den Images/tmp Ordner.
 //		Falls dies ein Fehler ergibt, wissen wir das kein File gesendet wurde oder ein anderer Fehler aufgetreten ist.
 		$tmp_path = "../images/tmp/".$_FILES["bild"]["name"];
@@ -148,6 +163,10 @@ function fotos() {
 			setValue('css_class_meldung',"fehler");
 			setValue('meldung', "Ein unbekannter Fehler ist aufgetreten.");
 		}
+	}
+	
+	if (isset($_REQUEST["senden_löschen"])){
+		print "OK";
 	}
     // Template abfüllen und Resultat zurückgeben
     setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);

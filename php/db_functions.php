@@ -35,10 +35,18 @@ function db_get_photos_from_tag($tagId){
     return sqlSelect("select fid from tag join fotos_tag on tag.tid=fotos_tag.idt JOIN fotos on fotos.fid=fotos_tag.idf WHERE tag.tid = $tagId");
 }
 
+function db_get_album_by_name($name){
+    return sqlSelect("select gid from gallerie WHERE name = '$name'");
+}
+
+function db_get_tags_from_photo($fid){
+    return sqlSelect("select tag.name from tag JOIN fotos_tag on fotos_tag.idt=tag.tid join fotos on fotos.fid=fotos_tag.idf WHERE fotos.fid = $fid");
+}
+
 // Inserts: 
 
 function db_insert_tag($name){
-    return sqlQuery("insert into tag (name) VALUE ('".escapeSpecialChars($name)."')");
+    return sqlQuery("insert into tag (name) VALUE ('".htmlspecialchars($name)."')");
 }
 
 function db_insert_fotos_tag($tagId, $fotoId){
@@ -50,5 +58,9 @@ function db_insert_foto($benutzerId, $galleryId){
 }
 
 function db_insert_benutzer($params, $passwort) {
-    sqlQuery("insert into benutzer (vorname, nachname, email, passwort) values ('".escapeSpecialChars($params['vorname'])."','".escapeSpecialChars($params['nachname'])."','".escapeSpecialChars($params['email'])."','".$passwort."')");
+    sqlQuery("insert into benutzer (vorname, nachname, email, passwort) values ('".htmlspecialchars($params['vorname'])."','".htmlspecialchars($params['nachname'])."','".htmlspecialchars($params['email'])."','".$passwort."')");
+}
+
+function db_insert_album($name, $benutzerId){
+    sqlQuery("insert into gallerie (name, idb) VALUE ('".htmlspecialchars($name)."', $benutzerId)");
 }

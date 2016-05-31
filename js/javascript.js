@@ -1,12 +1,8 @@
 function confdel(item) {
-    // Je nach System müssen Umlaute maskiert werden oder nicht
-//    answer=confirm(unescape("M%F6chten Sie " + item + " wirklich l%F6schen?"));
+//  Je nach System müssen Umlaute maskiert werden oder nicht
+//  answer=confirm(unescape("M%F6chten Sie " + item + " wirklich l%F6schen?"));
     answer = confirm("Möchten Sie " + item + " wirklich löschen?");
     return answer;
-}
-
-function setView($element) {
-
 }
 
 $(window).ready(function () {
@@ -31,7 +27,6 @@ $(window).ready(function () {
 
             // Die ID des Albums wird gespeichert
             var album = $(this).parent().attr("id").split("_")[0]
-            var $album_element = $("#" + album + "_zoom")
             // Die ID des Fotos wird gespeichert.
             var foto = $(this).attr("id").split("_")[0]
             // Jedes Zoom DIV wird wider unsichtbar gemacht,
@@ -47,9 +42,15 @@ $(window).ready(function () {
             $("#" + album + "_zoom").show()
 
             //Wenn auf das Schliessen Icon geklickt wird, soll das Grosse Bild wieder zugehen.
-            $(".close_icon").click(function () {
+            $(".close_button").click(function () {
                 $("#" + album + "_zoom").hide()
             })
+        }
+    })
+
+    $(".delete_button").click(function () {
+        if(confdel("dieses Bild")){
+            
         }
     })
 })

@@ -165,7 +165,6 @@ function setSessionValue($key, $value) {
 function getSessionValue($key) {
 	if (isset($_SESSION[$key])){
 		return $_SESSION[$key];
-		//unset($_SESSION[$key]);
 	}
 	else return "";
 }

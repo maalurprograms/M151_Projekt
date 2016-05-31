@@ -1,4 +1,5 @@
 <div id="content">
+    <p class='title'>Foto hinzufügen</p>
     <form action="<?php print getValue('phpmodule');?>", name="fotos" method="post" enctype="multipart/form-data">
         <input type="file" name="bild" required><br>
         Zu welcher Gallerie soll das Bild hinzugefügt werden?
