@@ -72,5 +72,6 @@ function db_insert_album($name, $benutzerId){
 // Delete:
 
 function db_delete_foto($fid){
+    sqlQuery("delete from fotos_tag where idf = $fid");
     sqlQuery("delete from fotos where fid = $fid");
 }

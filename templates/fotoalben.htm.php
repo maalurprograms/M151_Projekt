@@ -13,7 +13,7 @@
             <input type='image' class='close_button' src='../icons/close.png'>
             <input type='image' class='delete_button' src='../icons/delete.png'>
             <form class='delete_foto' name='fotoalben' action='".getValue('phpmodule')."' method='post'>
-                <input class='delete_foto_id' name='delete_foto' hidden>
+                <input class='delete_foto_id' name='delete_foto_id' hidden>
             </form>
         </div>";
 

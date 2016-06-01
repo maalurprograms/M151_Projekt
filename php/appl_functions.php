@@ -22,6 +22,15 @@ function getCssClass( $name ) {
 /*
  * Beinhaltet die Anwendungslogik zur Anzeige und zum Bearbeiten von allen Fotoalben
  */
+
+function deleteFoto($fid){
+//	Zuerst löschen iwr alle Einträge in der Datenbank und
+// 	danach löschen wir das Thumbnail und das Original Foto.
+	db_delete_foto($fid);
+	unlink("../images/$fid");
+	unlink("../images/thumbnails/$fid");
+}
+
 function fotoalben() {
 //  Es werden alle Gallerien des Angemeldeten Users ausgelesen.
 	$alben = db_get_alben_from_benutzer($_SESSION["benutzerId"]);
@@ -43,16 +52,21 @@ function fotoalben() {
 					}
 				}
 			}
+//			Das Array mit den gefundenen Bildern wird nun gespeichert.
 			setValue("search_results", $search_results);
 		}
 	}
 
-	if(isset($_REQUEST['delete_foto'])){
-		if(db_foto_from_user($_POST["delete_foto"])){
-			db_delete_foto($_POST["delete_foto"]);
+	if(isset($_REQUEST['delete_foto_id'])){
+		if(db_foto_from_user($_POST["delete_foto_id"])){
+//			Wenn das Foto zum löschen überhaupt dem angemeldeten User gehört, 
+//			wird es gelöscht.
+			deleteFoto($_POST["delete_foto_id"]);
 		}
 	}
 
+//	Wenn es Alben gibt, werden alle mit Ihren dazugehörigen Fotos aufgelistet.
+//	Falls es keine Bilder in einem Album hat wird nichts ausgegeben.
 	if($alben) {
 		$album_list = array();
 		foreach ($alben as $album) {
@@ -67,6 +81,8 @@ function fotoalben() {
 			setValue("album_".$album["aid"], $foto_list);
 		}
 		setValue("alben", $album_list);
+//		Nun wird eine Variabel Alben gesetzt die ein Array von alen alben beinhalten.
+//		Dann wird noch für jedes Album eine Variabel gesezt die alle Fotos des Albums beinhalten.
 	}
 
     // Template abfüllen und Resultat zurückgeben
@@ -178,7 +194,7 @@ function fotos() {
 //				Nun müssen wir noch das Thumbnail erstellen. Das wird in einer eigenen Methode erledigt.
 				createThumbnail($final_path, $thumbnail_path);
 
-//TAGS:			Jetz müssen wir noch die Tags hinzufügen
+//				Jetz müssen wir noch die Tags hinzufügen
 //				Falls nichts oder nur Spaces im Tag Feld steht ignorieren wir es.
 				if(!ctype_space($_POST["tags"]) && $_POST["tags"]){
 //					Die Tags werden aufgeteilt und es wird überprüft ob sie schon in der DB existieren.
