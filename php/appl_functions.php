@@ -23,6 +23,52 @@ function getCssClass( $name ) {
  * Beinhaltet die Anwendungslogik zur Anzeige und zum Bearbeiten von allen Fotoalben
  */
 function fotoalben() {
+//  Es werden alle Gallerien des Angemeldeten Users ausgelesen.
+	$alben = db_get_alben_from_benutzer($_SESSION["benutzerId"]);
+
+//  Das sollte warscheinlich nicht hier sein sonder als value (setValue, getValue) übergeben werden
+	if (isset($_REQUEST['senden_suche'])) {
+		if(!ctype_space($_POST["search_tags"]) && $_POST["search_tags"]){
+//  	Wenn eine Anfrage gesendet wurde und das Tag feld nicht leer ist, wird der String aus dem Tag Feld augeteilt.
+			setValue("search_tags", $_POST["search_tags"]);
+			$tags = explode(";", $_POST["search_tags"]);
+			$search_results = array();
+			foreach ($tags as $tag) {
+//  		Für jeden Tag der eingegeben wurde, wird geschaut ob es ihn gibt und wenn ja
+//  		werde alle Fotos die diesen tag haben angezeigt.
+				$tagId = db_get_tagid($tag)[0]["tid"];
+				if ($tagId){
+					foreach (db_get_fotos_from_tag($tagId) as $foto){
+						array_push($search_results, $foto["fid"]);
+					}
+				}
+			}
+			setValue("search_results", $search_results);
+		}
+	}
+
+	if(isset($_REQUEST['delete_foto'])){
+		if(db_foto_from_user($_POST["delete_foto"])){
+			db_delete_foto($_POST["delete_foto"]);
+		}
+	}
+
+	if($alben) {
+		$album_list = array();
+		foreach ($alben as $album) {
+			array_push($album_list, $album["aid"]."_".$album["name"]);
+			$foto_list = array();
+			$fotos = db_get_fotos_from_album($album["aid"]);
+			if ($fotos) {
+				foreach ($fotos as $foto) {
+					array_push($foto_list, $foto["fid"]);
+				}
+			}
+			setValue("album_".$album["aid"], $foto_list);
+		}
+		setValue("alben", $album_list);
+	}
+
     // Template abfüllen und Resultat zurückgeben
     setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
     return runTemplate( "../templates/fotoalben.htm.php" );
@@ -114,7 +160,7 @@ function createThumbnail($final_path, $thumbnail_path){
  */
 function fotos() {
 
-	if (isset($_REQUEST['senden_suche'])) {
+	if (isset($_REQUEST['senden'])) {
 //		Wenn eine request an den Server gesendet wurde, verschieben wir das Bild von dem Standart upload Ordner in den Images/tmp Ordner.
 //		Falls dies ein Fehler ergibt, wissen wir das kein File gesendet wurde oder ein anderer Fehler aufgetreten ist.
 		$tmp_path = "../images/tmp/".$_FILES["bild"]["name"];
@@ -124,7 +170,7 @@ function fotos() {
 //			Falls es kein Bil ist wird ein Fehler ausgegeben.
 			if(getimagesize($tmp_path)){
 //				Wir erstellen einen DB Eintrag für das Bild und verschieben es von images/tmp nach /images und nun mit der ID als Namen.
-				$bildId = db_insert_foto($_SESSION["benutzerId"], $_POST["gallerieId"]);
+				$bildId = db_insert_foto($_POST["gallerieId"]);
 				$final_path = "../images/$bildId";
 				$thumbnail_path = "../images/thumbnails/$bildId";
 				rename($tmp_path, $final_path);

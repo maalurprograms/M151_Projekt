@@ -169,14 +169,14 @@ function getSessionValue($key) {
 	else return "";
 }
 
-/**
- * Übergebenen String escapen (Sicherheitsgründe!) und zurückgeben
- *
- * @param   $attribut       Attribut, das in eine Tabelle eingefügt werden soll
- */
-function escapeSpecialChars($attribut) {
-	return mysqli_real_escape_string(getValue('cfg_db'), $attribut);
-}
+///**
+// * Übergebenen String escapen (Sicherheitsgründe!) und zurückgeben
+// *
+// * @param   $attribut       Attribut, das in eine Tabelle eingefügt werden soll
+// */
+//function escapeSpecialChars($attribut) {
+//	return mysqli_real_escape_string(getValue('cfg_db'), $attribut);
+//}
 
 /**
  * Übergebene SQL-Anweisung auf der DB ausführen und Resultat zurückgeben.
@@ -218,17 +218,17 @@ function redirect($id="") {
     exit();
 }
 
-/**
- * Prüft ob ein Eingabewert leer ist oder nicht.
- *
- * @param   $value      Eingabewert
- * @param   $maxlength  Minimale Länge der Eingabe
- */
-function CheckEmpty($value, $minlength=Null) {
-    if (empty($value)) return false;
-    if ( $minlength != Null && strlen($value) < $minlength ) return false;
-    else return true;
-}
+///**
+// * Prüft ob ein Eingabewert leer ist oder nicht.
+// *
+// * @param   $value      Eingabewert
+// * @param   $maxlength  Minimale Länge der Eingabe
+// */
+//function CheckEmpty($value, $minlength=Null) {
+//    if (empty($value)) return false;
+//    if ( $minlength != Null && strlen($value) < $minlength ) return false;
+//    else return true;
+//}
 
 /**
  * Prüft, ob eine Emailadresse korrekt ist oder nicht.
@@ -243,20 +243,20 @@ function CheckEmailFormat($value, $empty='N') {
     else return false;
 }
 
-/**
- * Prüft, ob eine Name (Nachname, Vorname) korrekt ist oder nicht.
- * Erlaubt sind die Zeichen in den eckigen Klammern, mit einer Länge
- * von mindestens 2 Zeichen.
- *
- * @param   $value      Eingabewert
- * @param   $empty      Der Name kann leer sein ('Y') oder nicht ('N')
- */
-function CheckName($value, $empty='N') {
-    $pattern_name = '/^[a-zA-ZäöüÄÖÜ \-]{2,}$/';
-    if ($empty=='Y' && empty($value)) return true;
-    if (preg_match($pattern_name, $value)) return true;
-    else return false;
-}
+///**
+// * Prüft, ob eine Name (Nachname, Vorname) korrekt ist oder nicht.
+// * Erlaubt sind die Zeichen in den eckigen Klammern, mit einer Länge
+// * von mindestens 2 Zeichen.
+// *
+// * @param   $value      Eingabewert
+// * @param   $empty      Der Name kann leer sein ('Y') oder nicht ('N')
+// */
+//function CheckName($value, $empty='N') {
+//    $pattern_name = '/^[a-zA-ZäöüÄÖÜ \-]{2,}$/';
+//    if ($empty=='Y' && empty($value)) return true;
+//    if (preg_match($pattern_name, $value)) return true;
+//    else return false;
+//}
 
 /**
  * Prüft, ob ein Passwort korrekt ist oder nicht. Das Pattern:
@@ -295,53 +295,55 @@ function passwordHash($passwort) {
 	return password_hash($passwort, PASSWORD_BCRYPT);
 }
 
-/*
- * Liefert den Wert des gewünschten Parameters zurück, der via POST bzw. GET übergeben worden ist
-*/
-function getRequestParam($param) {
-	if (isset($_REQUEST[$param])) return $_REQUEST[$param];
-	else return "";
-}
+///*
+// * Liefert den Wert des gewünschten Parameters zurück, der via POST bzw. GET übergeben worden ist
+//*/
+//function getRequestParam($param) {
+//	if (isset($_REQUEST[$param])){
+//		return $_REQUEST[$param];
+//	}
+//	else return "";
+//}
 
-/*
- * Bereitet einen Text für die Ausbage in HTML vor
-*/
-function htmlTextAufbereiten($value) {
-	return nl2br(htmlentities($value));
-}
+///*
+// * Bereitet einen Text für die Ausbage in HTML vor
+//*/
+//function htmlTextAufbereiten($value) {
+//	return nl2br(htmlentities($value));
+//}
 
-/**
- * Prüft ob es sich beim übergebenen Wert um eine Zahl handelt.
- *
- * @param   $value      Übergebender Wert
- */
-function isNumber($value) {
-    if (!is_numeric($value)) return false;
-    return true;
-}
+///**
+// * Prüft ob es sich beim übergebenen Wert um eine Zahl handelt.
+// *
+// * @param   $value      Übergebender Wert
+// */
+//function isNumber($value) {
+//    if (!is_numeric($value)) return false;
+//    return true;
+//}
 
-/**
- * Prüft ob es sich beim übergebenen Wert um eine positive Ganzzahl handelt (ohne e,+,-).
- *
- * @param   $value      Übergebender Wert
- */
-function isCleanNumber($value) {
-    if (!is_numeric($value)) return false;
-    $pattern_number = '/^[0-9]*$/';
-    if (preg_match($pattern_number, $value)) return true;
-    else return false;
-    return true;
-}
+///**
+// * Prüft ob es sich beim übergebenen Wert um eine positive Ganzzahl handelt (ohne e,+,-).
+// *
+// * @param   $value      Übergebender Wert
+// */
+//function isCleanNumber($value) {
+//    if (!is_numeric($value)) return false;
+//    $pattern_number = '/^[0-9]*$/';
+//    if (preg_match($pattern_number, $value)) return true;
+//    else return false;
+//    return true;
+//}
 
-/**
- * Prüft ob ein Eingabewert eine Zahl ist. Eine Leereingabe ist erlaubt.
- *
- * @param   $value         Eingabewert
- * @param   $minlength     Minimale Länge der Zahl
- */
-function CheckCleanNumberEmpty($value, $minlength=0) {
-    if (empty($value)) return true;
-    if (!isCleanNumber($value) || strlen($value) < $minlength) return false;
-    else return true;
-}
-?>
+///**
+// * Prüft ob ein Eingabewert eine Zahl ist. Eine Leereingabe ist erlaubt.
+// *
+// * @param   $value         Eingabewert
+// * @param   $minlength     Minimale Länge der Zahl
+// */
+//function CheckCleanNumberEmpty($value, $minlength=0) {
+//    if (empty($value)) return true;
+//    if (!isCleanNumber($value) || strlen($value) < $minlength) return false;
+//    else return true;
+//}
+//?>

@@ -15,14 +15,15 @@ $(window).ready(function () {
         if ($(this).parent().attr("class") == "search_result_album"){
             // Das geklickte Bild wird nun als SRC attribut im Zoom DIV angegeben.
             $("#search_results_zoom .zoom_img").attr("src", "../images/"+$(this).attr("id"))
+            // Die Id im Delete Form setzen damit wir beim absenden des Forms wissen welches bild wir löschen müssen.
+            $("#search_results_zoom .delete_foto_id").attr("value", $(this).attr("id"))
             // Das Zoom DIV wird gezeigt.
             $("#search_results_zoom").show()
 
             //Wenn auf das Schliessen Icon geklickt wird, soll das Grosse Bild wieder zugehen.
-            $(".close_icon").click(function () {
+            $(".close_button").click(function () {
                 $("#search_results_zoom").hide()
             })
-
         } else {
 
             // Die ID des Albums wird gespeichert
@@ -38,6 +39,8 @@ $(window).ready(function () {
             })
             // Das geklickte Bild wird nun als SRC attribut im Zoom DIV angegeben.
             $("#" + album + "_zoom .zoom_img").attr("src", "../images/" + foto)
+            // Die Id im Delete Form setzen damit wir beim absenden des Forms wissen welches bild wir löschen müssen.
+            $("#" + album + "_zoom .delete_foto_id").attr("value", foto)
             // Das Zoom DIV wird gezeigt.
             $("#" + album + "_zoom").show()
 
@@ -46,11 +49,13 @@ $(window).ready(function () {
                 $("#" + album + "_zoom").hide()
             })
         }
-    })
-
-    $(".delete_button").click(function () {
-        if(confdel("dieses Bild")){
-            
-        }
+        // Wenn auf das löschen icon geklickt wird, kommt eine Bestätigungsfrage.
+        // Danach wird ein submit auf das Delete_Foto form ausgeführt.
+        $(".delete_button").click(function () {
+            if (confdel("dieses Bild")){
+                $("#"+$(this).parent().attr("id")+" .delete_foto").submit()
+            }
+        })
+        
     })
 })

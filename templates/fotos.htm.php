@@ -6,8 +6,8 @@
         <select name="gallerieId" required>
 <!--            Generiere Auswahl der gallerie-->
             <?php
-                foreach (db_get_galleries_from_benutzer($_SESSION["benutzerId"]) as $gallerie){
-                    print "<option id='".$gallerie["gid"]."' value='".$gallerie["gid"]."'>".$gallerie["name"]."</option>";
+                foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $gallerie){
+                    print "<option id='".$gallerie["aid"]."' value='".$gallerie["aid"]."'>".$gallerie["name"]."</option>";
                 }
             ?>
         </select><br>

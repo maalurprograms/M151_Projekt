@@ -1,77 +1,61 @@
 <div id="content">
-<!--    TODO DELETE FORM-->
-    <form id="delete" name="fotoalben" action="<?php echo getValue('phpmodule'); ?>" method="post">
-        <input id="" name="" hidden>
-    </form>
-
     <form id="search" name="fotoalben" action="<?php echo getValue('phpmodule'); ?>" method="post">
         <input class="search_bar" name="search_tags" placeholder="Geben Sie hier ( mit ';' getrennt ) Tags ein" style="text-align: center; width: 400px" required>
         <input type="hidden" name="senden_suche">
         <input class="search_button" type="image" src="../icons/search.png">
     </form>
     <?php
-//      Es werden alle Gallerien des Angemeldeten Users ausgelesen.
-        $galleries = db_get_galleries_from_benutzer($_SESSION["benutzerId"]);
-        print "<div class='alben'>";
+        $html = "<div class='alben'>";
 
+//       Dies ist der Code Teil der im ZoomDiv bei sowohl den Alben als auch den Suchresultaten gleich.
+        $zoomContent = "
+            <img class='zoom_img'>
+            <input type='image' class='close_button' src='../icons/close.png'>
+            <input type='image' class='delete_button' src='../icons/delete.png'>
+            <form class='delete_foto' name='fotoalben' action='".getValue('phpmodule')."' method='post'>
+                <input class='delete_foto_id' name='delete_foto' hidden>
+            </form>
+        </div>";
 
-
-
-
-
-//      Das sollte warscheinlich nicht hier sein sonder als value (setValue, getValue) übergeben werden
-        if (isset($_REQUEST['senden'])) {
-            if(!ctype_space($_POST["search_tags"]) && $_POST["search_tags"]){
-//              Wenn eine Anfrage gesendet wurde und das Tag feld nicht leer ist, wird der String aus dem Tag Feld augeteilt.
-                print "
+    //  Wenn etwas Gesucht wurde, werden die Suchresultate angezeigt.
+        if (getValue("search_results")) {
+            $html .= "
                     <div class='search_result_album'>
-                        <p class='title'>Resultate für Tags: ".$_POST["search_tags"]."</p>";
-                $tags = explode(";", $_POST["search_tags"]);
-                foreach ($tags as $tag) {
-//                  Für jeden Tag der eingegeben wurde, wird geschaut ob es ihn gibt und wenn ja
-//                  werde alle Fotos die diesen tag haben angezeigt.
-                    $tagId = db_get_tagid($tag)[0]["tid"];
-                    if ($tagId){
-                        foreach (db_get_photos_from_tag($tagId) as $foto){
-                            $fotoId = $foto["fid"];
-                            print "<img id='$fotoId' src='../images/thumbnails/$fotoId'>";
-                        }
-                    }                
-                }
-                print "
-                    </div>
-                    <div class='zoom' id='search_results_zoom'>
-                        <img class='zoom_img'>
-                        <img class='close_button' src='../icons/close.png'>
-                        <img class='delete_button' src='../icons/delete.png'>
-                    </div>";
+                        <p class='title'>Resultate für Tags: ".getValue("search_tags")."</p>";
+    //       Jedes Bild das den/die Tag/s aus der Suchanfrage hat wird nun generiert.
+            foreach (getValue("search_results") as $fotoId){
+                $html.= "<img id='$fotoId' src='../images/thumbnails/$fotoId'>";
             }
+            
         }
+    //  Nun erstellen wir noch das Vergrösserte Bild das aber erst angezeigt wird wenn wir auf ein Bild klicken.
+        $html .= "
+                </div>
+                <div class='zoom' id='search_results_zoom'>$zoomContent";
     
-
-
-
-
-
-
-        if($galleries) {
-            foreach ($galleries as $gallery) {
-                print "<div class='album' id='" . $gallery["gid"] . "_album'><p class='title'>" . $gallery["name"] . "</p>";
-                $photos = db_get_photos_from_gallery($gallery["gid"]);
-                if ($photos) {
-                    foreach ($photos as $photo) {
-                        print "<img id='" . $photo["fid"] . "_foto' src='../images/thumbnails/" . $photo["fid"] . "'>";
+    //  Wenn der Benutzer Alben gespeichert hat werden si nun mit den dazugehörigen
+    //  Bildern angezeigt.
+        if(getValue("alben")) {
+            foreach (getValue("alben") as $album){
+    //          getValue("alben") gibt die Id und den Namen zurück, 
+    //          wesswegen wir den String noch mal aufteilen.
+                $albumId = explode("_", $album)[0];
+                $albumName = explode("_", $album)[1];
+                $html .= "<div class='album' id='$albumId".""."_album'><p class='title'>".$albumName."</p>";
+                if (getValue("album_".$albumId)){
+    //              Wenn das Album Fotos beinhaltet, werden diese als HTML generiert.
+                    foreach (getValue("album_$albumId") as $fotoId){
+                        $html .= "<img id='$fotoId".""."_foto' src='../images/thumbnails/$fotoId'>";
                     }
                 }
-                print "
+                $html .= "
                 </div>
-                <div class='zoom' id='" . $gallery["gid"] . "_zoom'>
-                    <img class='zoom_img'>
-                    <img class='close_button' src='../icons/close.png'>
-                    <img class='delete_button' src='../icons/delete.png'>
-                </div>";
+                <div class='zoom' id='$albumId".""."_zoom'>$zoomContent";
             }
-            print "</div>";
+            $html .= "</div>";
         }
+    
+        print $html;
+
     ?>
 </div>
