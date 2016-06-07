@@ -63,7 +63,7 @@ a.meta_menu:hover, a.meta_menu:active {
 	width: 90%;
 }
 
-.album, .search_result_album{
+.album, .search_result_album {
 	width: auto;
 	margin-bottom: 50px;
 	border-left: 3px solid;
@@ -87,6 +87,10 @@ a.meta_menu:hover, a.meta_menu:active {
 
 .close_button, .delete_button{
 	width: 50px;
+}
+
+.delete_album_button{
+	width: 40px;
 }
 
 #search {

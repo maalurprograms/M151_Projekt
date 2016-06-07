@@ -58,4 +58,12 @@ $(window).ready(function () {
         })
         
     })
+    
+    $(".delete_album_button").click(function () {
+        var albumId = $(this).attr("id").split("_")[3]
+        if (confdel("dieses Album ("+ $("#"+albumId+"_album .title").text()+")")){
+            $("#delete_album_form_"+albumId).submit();
+        }
+    })
+    
 })

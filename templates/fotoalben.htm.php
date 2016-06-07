@@ -41,7 +41,9 @@
     //          wesswegen wir den String noch mal aufteilen.
                 $albumId = explode("_", $album)[0];
                 $albumName = explode("_", $album)[1];
-                $html .= "<div class='album' id='$albumId".""."_album'><p class='title'>".$albumName."</p>";
+                $html .= "
+                <div class='album' id='$albumId".""."_album'>
+                    <p class='title'>".$albumName."</p>";
                 if (getValue("album_".$albumId)){
     //              Wenn das Album Fotos beinhaltet, werden diese als HTML generiert.
                     foreach (getValue("album_$albumId") as $fotoId){
@@ -49,10 +51,23 @@
                     }
                 }
                 $html .= "
+                    <p><input type='image' id='delete_album_button_".$albumId."' class='delete_album_button' src='../icons/delete.png'></p>
                 </div>
+                <form class='delete_album' id='delete_album_form_".$albumId."' name='fotoalben' action='".getValue('phpmodule')."' method='post'>
+                    <input name='delete_album_id' value='$albumId' hidden>
+                </form>
                 <div class='zoom' id='$albumId".""."_zoom'>$zoomContent";
             }
-            $html .= "</div>";
+            $html .= "
+                <div class='album'>
+                <p class='title'>Ihre Tags:</p>
+                <p>";
+
+            foreach (db_get_all_tags_from_benutzer($_SESSION["benutzerId"]) as $t){
+                $html.=$t["name"].", ";
+            }
+
+            $html .= "</p></div>";
         }
     
         print $html;

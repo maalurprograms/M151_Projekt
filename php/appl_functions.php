@@ -31,6 +31,15 @@ function deleteFoto($fid){
 	unlink("../images/thumbnails/$fid");
 }
 
+function deleteAlbum($aid){
+	if(db_get_fotos_from_album($aid)) {
+		foreach (db_get_fotos_from_album($aid) as $f) {
+			unlink("../images/" . $f["fid"]);
+			unlink("../images/thumbnails/" . $f["fid"]);
+		}
+	}
+}
+
 function fotoalben() {
 //  Es werden alle Gallerien des Angemeldeten Users ausgelesen.
 	$alben = db_get_alben_from_benutzer($_SESSION["benutzerId"]);
@@ -62,6 +71,19 @@ function fotoalben() {
 //			Wenn das Foto zum löschen überhaupt dem angemeldeten User gehört, 
 //			wird es gelöscht.
 			deleteFoto($_POST["delete_foto_id"]);
+		}
+	}
+
+	if(isset($_REQUEST['delete_album_id'])){
+//		Wenn das Foto zum löschen überhaupt dem angemeldeten User gehört, 
+//		wird es gelöscht.
+		foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $v){
+			if ($v["aid"] == $_POST["delete_album_id"]){
+				deleteAlbum($_POST["delete_album_id"]);
+				db_delete_album($_POST["delete_album_id"]);
+				setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
+				return runTemplate( "../templates/fotoalben.htm.php" );
+			}
 		}
 	}
 
@@ -100,12 +122,14 @@ function album() {
 //			Wenn ja dann wird ausgegeben das das Album schon existiert.
 //			Ansonsten wird es erstellt.
 
-			foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $v){
-				if ($v["name"] == $_POST["name"]){
-					setValue('css_class_meldung',"fehler");
-					setValue('meldung', "Dieses Album existiert bereits.");
-					setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
-					return runTemplate( "../templates/album.htm.php" );
+			if (db_get_alben_from_benutzer($_SESSION["benutzerId"])) {
+				foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $v) {
+					if ($v["name"] == $_POST["name"]) {
+						setValue('css_class_meldung', "fehler");
+						setValue('meldung', "Dieses Album existiert bereits.");
+						setValue('phpmodule', $_SERVER['PHP_SELF'] . "?id=" . __FUNCTION__);
+						return runTemplate("../templates/album.htm.php");
+					}
 				}
 			}
 

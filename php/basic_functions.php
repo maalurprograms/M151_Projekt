@@ -231,7 +231,7 @@ function sqlSelect($sql, $types, $params) {
 
 	// Danach führen wir das SQL Statement aus.
 	// Falls es einen Fehler gibt geben wir den zusammen mit dem Statement aus.
-	if(!($pstmt->execute()))die("<pre>".$sql.":</pre> ".$pstmt->error());
+	if(!($pstmt->execute()))die("<pre>".$sql.":</pre> ".$pstmt->error);
 
 	// Nun müssen wir noch das Resultat Parsen:
 	$result = $pstmt->get_result();
@@ -263,7 +263,7 @@ function sqlQueryPstmt($sql, $types, $params) {
 
 	// Danach führen wir das SQL Statement aus.
 	// Falls es einen Fehler gibt geben wir den zusammen mit dem Statement aus.
-	if(!($pstmt->execute()))die("<pre>".$sql.":</pre> ".$pstmt->error());
+	if(!($pstmt->execute()))die("<pre>".$sql.":</pre> ".$pstmt->error);
 
 	// Die Id des hinzugefügten elementes zurück geben
 	return mysqli_insert_id(getValue('cfg_db'));
