@@ -58,7 +58,7 @@ function fotoalben() {
 	}
 
 	if(isset($_REQUEST['delete_foto_id'])){
-		if(db_foto_from_user($_POST["delete_foto_id"])){
+		if(db_check_foto_from_user($_POST["delete_foto_id"])){
 //			Wenn das Foto zum löschen überhaupt dem angemeldeten User gehört, 
 //			wird es gelöscht.
 			deleteFoto($_POST["delete_foto_id"]);
@@ -99,14 +99,19 @@ function album() {
 //			Wenn der Name nicht leer ist, wird geschaut ob es ein Album mit exakt diesem Namen schon gibt.
 //			Wenn ja dann wird ausgegeben das das Album schon existiert.
 //			Ansonsten wird es erstellt.
-			if (!db_get_album_by_name($_POST["name"])){
-				db_insert_album($_POST["name"], $_SESSION["benutzerId"]);
-				setValue('css_class_meldung',"meldung");
-				setValue('meldung', "Das Album wurde erstellt.");
-			} else{
-				setValue('css_class_meldung',"fehler");
-				setValue('meldung', "Dieses Album existiert bereits.");
+
+			foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $v){
+				if ($v["name"] == $_POST["name"]){
+					setValue('css_class_meldung',"fehler");
+					setValue('meldung', "Dieses Album existiert bereits.");
+					setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
+					return runTemplate( "../templates/album.htm.php" );
+				}
 			}
+
+			db_insert_album($_POST["name"], $_SESSION["benutzerId"]);
+			setValue('css_class_meldung',"meldung");
+			setValue('meldung', "Das Album wurde erstellt.");
 		}
 	}
     // Template abfüllen und Resultat zurückgeben
@@ -175,56 +180,59 @@ function createThumbnail($final_path, $thumbnail_path){
  * Beinhaltet die Anwendungslogik zum Hinzufügen von Fotos zu einem Album
  */
 function fotos() {
-
-	if (isset($_REQUEST['senden'])) {
+	if (db_get_alben_from_benutzer($_SESSION["benutzerId"])) {
+		if (isset($_REQUEST['senden'])) {
 //		Wenn eine request an den Server gesendet wurde, verschieben wir das Bild von dem Standart upload Ordner in den Images/tmp Ordner.
 //		Falls dies ein Fehler ergibt, wissen wir das kein File gesendet wurde oder ein anderer Fehler aufgetreten ist.
-		$tmp_path = "../images/tmp/".$_FILES["bild"]["name"];
+			$tmp_path = "../images/tmp/" . $_FILES["bild"]["name"];
 
-		if (move_uploaded_file($_FILES['bild']['tmp_name'], $tmp_path)) {
+			if (move_uploaded_file($_FILES['bild']['tmp_name'], $tmp_path)) {
 //			Wenn wir die Bild grösse aus dem File lesen können wissen wir das es ein Bild ist.
 //			Falls es kein Bil ist wird ein Fehler ausgegeben.
-			if(getimagesize($tmp_path)){
+				if (getimagesize($tmp_path)) {
 //				Wir erstellen einen DB Eintrag für das Bild und verschieben es von images/tmp nach /images und nun mit der ID als Namen.
-				$bildId = db_insert_foto($_POST["gallerieId"]);
-				$final_path = "../images/$bildId";
-				$thumbnail_path = "../images/thumbnails/$bildId";
-				rename($tmp_path, $final_path);
+					$bildId = db_insert_foto($_POST["gallerieId"]);
+					$final_path = "../images/$bildId";
+					$thumbnail_path = "../images/thumbnails/$bildId";
+					rename($tmp_path, $final_path);
 
 //				Nun müssen wir noch das Thumbnail erstellen. Das wird in einer eigenen Methode erledigt.
-				createThumbnail($final_path, $thumbnail_path);
+					createThumbnail($final_path, $thumbnail_path);
 
 //				Jetz müssen wir noch die Tags hinzufügen
 //				Falls nichts oder nur Spaces im Tag Feld steht ignorieren wir es.
-				if(!ctype_space($_POST["tags"]) && $_POST["tags"]){
+					if (!ctype_space($_POST["tags"]) && $_POST["tags"]) {
 //					Die Tags werden aufgeteilt und es wird überprüft ob sie schon in der DB existieren.
-//					Wenn aj wird nur die Verknüpfung von Foto und Tag hinzugefügt. Wenn der Tag noch nicht existiert,
+//					Wenn ja wird nur die Verknüpfung von Foto und Tag hinzugefügt. Wenn der Tag noch nicht existiert,
 //					wird er erstellt.
-					$tag_list = explode(";", $_POST["tags"]);
-					foreach ($tag_list as $tag){
-//						TODO Hier macht alles Probleme keine Ahnung was falschläuft.
-						$db_tagId = db_get_tagid($tag)[0]["tid"];
-						if (!$db_tagId){
-							$tagId = db_insert_tag($tag);
-						} else{
-							$tagId = $db_tagId;
+						$tag_list = explode(";", $_POST["tags"]);
+						foreach ($tag_list as $tag) {
+							$db_tagId = db_get_tagid($tag)[0]["tid"];
+							if (!$db_tagId) {
+								$tagId = db_insert_tag($tag);
+							} else {
+								$tagId = $db_tagId;
+							}
+							db_insert_fotos_tag($tagId, $bildId);
 						}
-						db_insert_fotos_tag($tagId,$bildId);
 					}
-				}
 
-				setValue('css_class_meldung',"meldung");
-				setValue('meldung', "Ihr Bild wurde hochgeladen.");
-			} else {
+					setValue('css_class_meldung', "meldung");
+					setValue('meldung', "Ihr Bild wurde hochgeladen.");
+				} else {
 //				Falls die hochgeladene Datei kein Bild ist, wird sie wider aus dem Temporären Verzeichniss gelöscht.
-				unlink($tmp_path);
-				setValue('css_class_meldung',"fehler");
-				setValue('meldung', "Unbekannter Bildtyp.");
+					unlink($tmp_path);
+					setValue('css_class_meldung', "fehler");
+					setValue('meldung', "Unbekannter Bildtyp.");
+				}
+			} else {
+				setValue('css_class_meldung', "fehler");
+				setValue('meldung', "Ein unbekannter Fehler ist aufgetreten.");
 			}
-		} else {
-			setValue('css_class_meldung',"fehler");
-			setValue('meldung', "Ein unbekannter Fehler ist aufgetreten.");
 		}
+	} else{
+		setValue('css_class_meldung', "fehler");
+		setValue('meldung', "Sie müssen zuerst ein Album erstellen.");
 	}
 	
 	if (isset($_REQUEST["senden_löschen"])){

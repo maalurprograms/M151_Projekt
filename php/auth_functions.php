@@ -104,7 +104,7 @@ function checkRegistration() {
 	}
     if (!CheckPasswordFormat($_REQUEST['passwort'])) {
         $css_classes['passwort'] = getValue('cfg_css_class_error');
-		$fehlermeldung .= "Falsches Format Passwort. ";
+		$fehlermeldung .= "Falsches Format Passwort. Mindestens: 1 Kleinbuchstaben, 1 Grossbuchstaben, 1 Sonderzeichen  und 8 bis 20 Zeichen lang.";
     }
     if (!CheckPasswordCompare($_REQUEST['passwort'], $_REQUEST['passwort2'])) {
         $css_classes['passwort'] = getValue('cfg_css_class_error');

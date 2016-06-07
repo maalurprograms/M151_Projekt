@@ -179,15 +179,64 @@ function getSessionValue($key) {
 //}
 
 /**
+ * Konvertiert ein Array mit Werten als Inhalt in ein Array mit Referenzen als Inhalt
+ * 
+ * @param $types Die Typen der Werte für bind_param
+ * @param $params Die Parameter für bind_param
+ * @return array Ein Array mit Referenzen als Inhalt
+ */
+
+function refArray($types, $params){
+	// http://stackoverflow.com/questions/5100046/how-to-bind-mysqli-bind-param-arguments-dynamically-in-php
+	// Die Typen werden als erstes Element gespeichert da bind_param() als erstes Argument die Typen will.
+	$bind_names[] = $types;
+	for ($i=0; $i<count($params);$i++)
+	{
+		// bind_name bekommt z.B. den Wert bind0;
+		$bind_name = 'bind' . $i;
+		// $$bind_name bekommt den Wert des ersten Elements im array $params. also z.B. "Test"
+		// Da $$bind_name nun aber eine variable Variabel ist bedeutet das $$bind_name eigentlich
+		// $bind0 heisst.
+		// Also: $bind0 = "Test"
+		$$bind_name = $params[$i];
+		// Nun fügen wir $bind0 nun noch zu einem array hinzu. Das & Zeichen steht dafür,
+		// dass nur die Referenz und nicht der Wert in das Array gespeichert wird.
+		$bind_names[] = &$$bind_name;
+
+		/*
+		Wofür haben wir das alles jetz gemacht?
+		Eigentlich um die Methode bind_param auszutricksen und sie Dynamisch zu benützen.
+		Ursprünglich nimmt die Methode nur Variabeln an also: bind_param($var)
+		Was nicht funktioniert ist bind_param("Test") denn die Methode bracuht eine Referenz.
+		Warum haben wir nicht einfach das $params Array übergeben? Weil in diesem Array keine Referenten gespeichert werden sondern nur Werte.
+		Was wir oben in diesem for gemacht haben ist wir verwandeln ein Array von Werten in ein Array von Referenzen.
+		Also von array("Test", "test") zu array($var1, $var2)
+		Damit übergeben wir der Methode keine Werte mehr sonder eine Referenz auf eine Variabel mit dem Wert.
+		*/
+	}
+	return $bind_names;
+}
+
+/**
  * Übergebene SQL-Anweisung auf der DB ausführen und Resultat zurückgeben.
  *
  * @param   $sql       Select-Befehl, welcher ausgeführt werden soll
  */
-function sqlSelect($sql) {
-	$data = "";
- 	$result = mysqli_query(getValue('cfg_db'), $sql);
- 	if (!$result ) die("Fehler: ".mysqli_error());
+
+
+function sqlSelect($sql, $types, $params) {
+	// Wir schützen uns vor SQL-Injection mit prepare und bind_params:	
+	$pstmt = getValue('cfg_db')->prepare($sql);
+	call_user_func_array(array($pstmt, "bind_param"), refArray($types, $params));
+
+	// Danach führen wir das SQL Statement aus.
+	// Falls es einen Fehler gibt geben wir den zusammen mit dem Statement aus.
+	if(!($pstmt->execute()))die("<pre>".$sql.":</pre> ".$pstmt->error());
+
+	// Nun müssen wir noch das Resultat Parsen:
+	$result = $pstmt->get_result();
 	if ($result->num_rows === 0){
+		// Falss die SQL-Abfrage keine Resultate hat, geben wir False zurück.		
 		return false;
 	} else {
 		while ($row = mysqli_fetch_assoc($result)) $data[] = $row;
@@ -206,6 +255,19 @@ function sqlSelect($sql) {
 //	 Die Id des hinzugefügten elementes zurück geben
  	return mysqli_insert_id(getValue('cfg_db'));
  }
+
+function sqlQueryPstmt($sql, $types, $params) {
+	// Wir schützen uns vor SQL-Injection mit prepare und bind_params:	
+	$pstmt = getValue('cfg_db')->prepare($sql);
+	call_user_func_array(array($pstmt, "bind_param"), refArray($types, $params));
+
+	// Danach führen wir das SQL Statement aus.
+	// Falls es einen Fehler gibt geben wir den zusammen mit dem Statement aus.
+	if(!($pstmt->execute()))die("<pre>".$sql.":</pre> ".$pstmt->error());
+
+	// Die Id des hinzugefügten elementes zurück geben
+	return mysqli_insert_id(getValue('cfg_db'));
+}
 
 /**
  * Aktives php-Modul noch einmal aufrufen.
