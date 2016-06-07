@@ -45,7 +45,7 @@ function db_check_foto_from_user($fid){
 }
 
 function db_get_all_tags_from_benutzer($bid){
-    return sqlSelect("SELECT tag.name FROM tag join fotos_tag on fotos_tag.idt=tag.tid join fotos on fotos.fid=fotos_tag.idf JOIN album on album.aid=fotos.ida join benutzer on benutzer.bid=album.idb where benutzer.bid = ?", "i", array($bid));
+    return sqlSelect("SELECT DISTINCT tag.name FROM tag join fotos_tag on fotos_tag.idt=tag.tid join fotos on fotos.fid=fotos_tag.idf JOIN album on album.aid=fotos.ida join benutzer on benutzer.bid=album.idb where benutzer.bid = ?", "i", array($bid));
 }
 
 // Inserts: 

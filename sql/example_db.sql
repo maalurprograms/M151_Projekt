@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 01, 2016 at 04:54 
+-- Generation Time: Jun 07, 2016 at 03:40 
 -- Server version: 10.1.13-MariaDB
 -- PHP Version: 7.0.6
 
@@ -37,7 +37,7 @@ CREATE TABLE `album` (
 --
 
 INSERT INTO `album` (`aid`, `name`, `idb`) VALUES
-(3, 'Test Album', 5);
+(26, 'Beispiel', 9);
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,7 @@ CREATE TABLE `benutzer` (
 --
 
 INSERT INTO `benutzer` (`bid`, `vorname`, `nachname`, `email`, `passwort`) VALUES
-(5, 'Jonas', 'Cosandey', 'jonascosandey@hotmail.com', '$2y$10$O42qs2hGlrjq640iYb7jpun5wpdo.Ivg/p4AKJRfq5qbRc6dLj1d2');
+(9, 'Jonas', 'Cosandey', 'jonascosandey@hotmail.com', '$2y$10$zuFwwalwzSBAeNknjsvaYeeB4iYV.DwxikjjWsSBsXLVUHNxZkyl2');
 
 -- --------------------------------------------------------
 
@@ -76,16 +76,17 @@ CREATE TABLE `fotos` (
 --
 
 INSERT INTO `fotos` (`fid`, `ida`) VALUES
-(178, 3),
-(179, 3),
-(180, 3),
-(181, 3),
-(182, 3),
-(183, 3),
-(185, 3),
-(186, 3),
-(187, 3),
-(188, 3);
+(235, 26),
+(236, 26),
+(237, 26),
+(238, 26),
+(239, 26),
+(240, 26),
+(241, 26),
+(242, 26),
+(243, 26),
+(244, 26),
+(245, 26);
 
 -- --------------------------------------------------------
 
@@ -104,39 +105,37 @@ CREATE TABLE `fotos_tag` (
 --
 
 INSERT INTO `fotos_tag` (`id`, `idf`, `idt`) VALUES
-(229, 178, 134),
-(230, 178, 135),
-(231, 178, 136),
-(232, 178, 137),
-(233, 179, 134),
-(234, 179, 138),
-(235, 180, 134),
-(236, 180, 139),
-(237, 180, 140),
-(238, 181, 134),
-(239, 181, 141),
-(240, 182, 134),
-(241, 182, 142),
-(242, 183, 134),
-(243, 183, 139),
-(244, 185, 134),
-(245, 185, 138),
-(246, 186, 134),
-(247, 186, 135),
-(248, 186, 136),
-(249, 186, 137),
-(250, 187, 134),
-(251, 187, 143),
-(252, 188, 134),
-(253, 188, 144),
-(254, 191, 145),
-(255, 191, 146),
-(256, 192, 147),
-(257, 193, 148),
-(258, 194, 149),
-(259, 195, 150),
-(260, 196, 151),
-(261, 197, 152);
+(282, 235, 166),
+(283, 235, 167),
+(284, 235, 168),
+(285, 236, 167),
+(286, 236, 169),
+(287, 236, 170),
+(288, 237, 171),
+(289, 237, 168),
+(290, 237, 172),
+(291, 238, 173),
+(292, 238, 174),
+(293, 238, 175),
+(294, 239, 176),
+(295, 239, 168),
+(296, 239, 167),
+(297, 240, 173),
+(298, 240, 174),
+(299, 240, 177),
+(300, 241, 171),
+(301, 241, 178),
+(302, 242, 179),
+(303, 242, 180),
+(304, 243, 170),
+(305, 243, 181),
+(306, 243, 182),
+(307, 244, 183),
+(308, 244, 184),
+(309, 244, 185),
+(310, 245, 183),
+(311, 245, 184),
+(312, 245, 185);
 
 -- --------------------------------------------------------
 
@@ -154,25 +153,26 @@ CREATE TABLE `tag` (
 --
 
 INSERT INTO `tag` (`tid`, `name`) VALUES
-(134, 'Guild Wars 2'),
-(135, 'Epic'),
-(136, 'Boss'),
-(137, 'Dragon'),
-(138, 'Beautifull'),
-(139, 'Amazing'),
-(140, 'Christmas'),
-(141, 'Char'),
-(142, 'Desert'),
-(143, 'Charlet'),
-(144, 'Char Wallpaper'),
-(145, 'Joker'),
-(146, 'Pokemon'),
-(147, 'Nvidia'),
-(148, 'Galaxy'),
-(149, 'LinuxFTW'),
-(150, 'Blurry'),
-(151, 'Assassins Creed'),
-(152, 'Mass Effect');
+(166, 'space'),
+(167, 'beautifull'),
+(168, 'epic'),
+(169, 'beach'),
+(170, 'miami'),
+(171, 'cat'),
+(172, 'animal'),
+(173, 'linux'),
+(174, 'tux'),
+(175, 'cosplay'),
+(176, 'earth'),
+(177, 'linux mint'),
+(178, 'animal:epic'),
+(179, 'smite'),
+(180, 'wallpaper'),
+(181, 'sunset'),
+(182, 'america'),
+(183, 'nvidia'),
+(184, ' green'),
+(185, 'claw');
 
 --
 -- Indexes for dumped tables
@@ -217,27 +217,27 @@ ALTER TABLE `tag`
 -- AUTO_INCREMENT for table `album`
 --
 ALTER TABLE `album`
-  MODIFY `aid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `aid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 --
 -- AUTO_INCREMENT for table `benutzer`
 --
 ALTER TABLE `benutzer`
-  MODIFY `bid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `bid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `fotos`
 --
 ALTER TABLE `fotos`
-  MODIFY `fid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
+  MODIFY `fid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246;
 --
 -- AUTO_INCREMENT for table `fotos_tag`
 --
 ALTER TABLE `fotos_tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=263;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=313;
 --
 -- AUTO_INCREMENT for table `tag`
 --
 ALTER TABLE `tag`
-  MODIFY `tid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `tid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
