@@ -36,11 +36,7 @@ function db_get_fotos_from_tag($tid){
     return sqlSelect("select fid from tag join fotos_tag on tag.tid=fotos_tag.idt JOIN fotos on fotos.fid=fotos_tag.idf WHERE tag.tid=?", "i", array($tid));
 }
 
-function db_get_tags_from_photo($fid){
-    return sqlSelect("select tag.name from tag JOIN fotos_tag on fotos_tag.idt=tag.tid join fotos on fotos.fid=fotos_tag.idf WHERE fotos.fid=?", "i", array($fid));
-}
-
-function db_check_foto_from_user($fid){
+function db_check_foto_from_benutzer($fid){
     return sqlSelect("select fid from fotos join album on fotos.ida=album.aid join benutzer on album.idb=benutzer.bid where fotos.fid=?", "i", array($fid));
 }
 
@@ -51,34 +47,34 @@ function db_get_all_tags_from_benutzer($bid){
 // Inserts: 
 
 function db_insert_tag($name){
-    return sqlQueryPstmt("insert into tag (name) VALUE (?)", "s", array(htmlspecialchars($name)));
+    return sqlQuery("insert into tag (name) VALUE (?)", "s", array(htmlspecialchars($name)));
 }
 
 function db_insert_fotos_tag($tid, $fid){
-    return sqlQueryPstmt("insert into fotos_tag (idf, idt) VALUE (?, ?)", "ii", array($fid, $tid));
+    return sqlQuery("insert into fotos_tag (idf, idt) VALUE (?, ?)", "ii", array($fid, $tid));
 }
 
 function db_insert_foto($aid){
-    return sqlQueryPstmt("insert into fotos (ida) VALUE (?)", "i", array($aid));
+    return sqlQuery("insert into fotos (ida) VALUE (?)", "i", array($aid));
 }
 
 function db_insert_benutzer($params, $passwort) {
-    sqlQueryPstmt("insert into benutzer (vorname, nachname, email, passwort) values (?,?,?,?)", "ssss", array(htmlspecialchars($params['vorname']), htmlspecialchars($params['nachname']), htmlspecialchars($params['email']), $passwort));
+    sqlQuery("insert into benutzer (vorname, nachname, email, passwort) values (?,?,?,?)", "ssss", array(htmlspecialchars($params['vorname']), htmlspecialchars($params['nachname']), htmlspecialchars($params['email']), $passwort));
 }
 
 function db_insert_album($name, $benutzerId){
-    sqlQueryPstmt("insert into album (name, idb) VALUE (?,?)", "si", array(htmlspecialchars($name), $benutzerId));
+    sqlQuery("insert into album (name, idb) VALUE (?,?)", "si", array(htmlspecialchars($name), $benutzerId));
 }
 
 // Delete:
 
 function db_delete_foto($fid){
-    sqlQueryPstmt("delete from fotos_tag where idf = ?", "i", array($fid));
-    sqlQueryPstmt("delete from fotos where fid = ?", "i", array($fid));
+    sqlQuery("delete from fotos_tag where idf = ?", "i", array($fid));
+    sqlQuery("delete from fotos where fid = ?", "i", array($fid));
 }
 
 function db_delete_album($aid){
-    sqlQueryPstmt("delete from fotos_tag where fotos_tag.idf in ( select fid from fotos where fotos.ida=?)", "i", array($aid));
-    sqlQueryPstmt("delete from fotos where fotos.ida=?", "i", array($aid));
-    sqlQueryPstmt("delete from album where aid = ?", "i", array($aid));
+    sqlQuery("delete from fotos_tag where fotos_tag.idf in ( select fid from fotos where fotos.ida=?)", "i", array($aid));
+    sqlQuery("delete from fotos where fotos.ida=?", "i", array($aid));
+    sqlQuery("delete from album where aid = ?", "i", array($aid));
 }

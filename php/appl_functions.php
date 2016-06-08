@@ -19,6 +19,11 @@ function getCssClass( $name ) {
     else return getValue('cfg_css_class_normal');
 }
 
+function setDefaultError(){
+	setValue('css_class_meldung', "fehler");
+	setValue('meldung', "Ein Fehler ist aufgetreten. Bitte versuchen Sie es nocheinmal.");
+}
+
 /*
  * Beinhaltet die Anwendungslogik zur Anzeige und zum Bearbeiten von allen Fotoalben
  */
@@ -66,24 +71,32 @@ function fotoalben() {
 		}
 	}
 
-	if(isset($_REQUEST['delete_foto_id'])){
-		if(db_check_foto_from_user($_POST["delete_foto_id"])){
+	if(isset($_POST['delete_foto_id'])){
+		if (isCleanNumber($_POST['delete_foto_id'])) {
+			if (db_check_foto_from_benutzer($_POST["delete_foto_id"])) {
 //			Wenn das Foto zum löschen überhaupt dem angemeldeten User gehört, 
 //			wird es gelöscht.
-			deleteFoto($_POST["delete_foto_id"]);
+				deleteFoto($_POST["delete_foto_id"]);
+			}
+		}  else {
+			setDefaultError();
 		}
 	}
 
-	if(isset($_REQUEST['delete_album_id'])){
+	if(isset($_POST['delete_album_id'])){
 //		Wenn das Foto zum löschen überhaupt dem angemeldeten User gehört, 
 //		wird es gelöscht.
-		foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $v){
-			if ($v["aid"] == $_POST["delete_album_id"]){
-				deleteAlbum($_POST["delete_album_id"]);
-				db_delete_album($_POST["delete_album_id"]);
-				setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);
-				return runTemplate( "../templates/fotoalben.htm.php" );
+		if (isCleanNumber($_POST['delete_album_id'])) {
+			foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $v) {
+				if ($v["aid"] == $_POST["delete_album_id"]) {
+					deleteAlbum($_POST["delete_album_id"]);
+					db_delete_album($_POST["delete_album_id"]);
+					setValue('phpmodule', $_SERVER['PHP_SELF'] . "?id=" . __FUNCTION__);
+					return runTemplate("../templates/fotoalben.htm.php");
+				}
 			}
+		} else{
+			setDefaultError();
 		}
 	}
 
@@ -116,7 +129,7 @@ function fotoalben() {
  * Beinhaltet die Anwendungslogik zum Hinzufügen eines Fotoalbums
  */
 function album() {
-	if (isset($_REQUEST['senden'])) {
+	if (isset($_POST['senden'])) {
 		if(!ctype_space($_POST["name"]) && $_POST["name"]){
 //			Wenn der Name nicht leer ist, wird geschaut ob es ein Album mit exakt diesem Namen schon gibt.
 //			Wenn ja dann wird ausgegeben das das Album schon existiert.
@@ -205,7 +218,7 @@ function createThumbnail($final_path, $thumbnail_path){
  */
 function fotos() {
 	if (db_get_alben_from_benutzer($_SESSION["benutzerId"])) {
-		if (isset($_REQUEST['senden'])) {
+		if (isset($_POST['senden'])) {
 //		Wenn eine request an den Server gesendet wurde, verschieben wir das Bild von dem Standart upload Ordner in den Images/tmp Ordner.
 //		Falls dies ein Fehler ergibt, wissen wir das kein File gesendet wurde oder ein anderer Fehler aufgetreten ist.
 			$tmp_path = "../images/tmp/" . $_FILES["bild"]["name"];
@@ -216,33 +229,39 @@ function fotos() {
 				if (getimagesize($tmp_path)) {
 //				Wir erstellen einen DB Eintrag für das Bild und verschieben es von images/tmp nach /images und nun mit der ID als Namen.
 					$bildId = db_insert_foto($_POST["gallerieId"]);
-					$final_path = "../images/$bildId";
-					$thumbnail_path = "../images/thumbnails/$bildId";
-					rename($tmp_path, $final_path);
+//					Wenn keine nummer als AlbumId mitegeben wurde wird ein Fehler ausgegeben.
+					if (isCleanNumber($bildId)) {
+						$final_path = "../images/$bildId";
+						$thumbnail_path = "../images/thumbnails/$bildId";
+						rename($tmp_path, $final_path);
 
 //				Nun müssen wir noch das Thumbnail erstellen. Das wird in einer eigenen Methode erledigt.
-					createThumbnail($final_path, $thumbnail_path);
+						createThumbnail($final_path, $thumbnail_path);
 
 //				Jetz müssen wir noch die Tags hinzufügen
 //				Falls nichts oder nur Spaces im Tag Feld steht ignorieren wir es.
-					if (!ctype_space($_POST["tags"]) && $_POST["tags"]) {
+						if (!ctype_space($_POST["tags"]) && $_POST["tags"]) {
 //					Die Tags werden aufgeteilt und es wird überprüft ob sie schon in der DB existieren.
 //					Wenn ja wird nur die Verknüpfung von Foto und Tag hinzugefügt. Wenn der Tag noch nicht existiert,
 //					wird er erstellt.
-						$tag_list = explode(";", $_POST["tags"]);
-						foreach ($tag_list as $tag) {
-							$db_tagId = db_get_tagid($tag)[0]["tid"];
-							if (!$db_tagId) {
-								$tagId = db_insert_tag($tag);
-							} else {
-								$tagId = $db_tagId;
+							$tag_list = explode(";", $_POST["tags"]);
+							foreach ($tag_list as $tag) {
+								$db_tagId = db_get_tagid($tag)[0]["tid"];
+								if (!$db_tagId) {
+									$tagId = db_insert_tag($tag);
+								} else {
+									$tagId = $db_tagId;
+								}
+								db_insert_fotos_tag($tagId, $bildId);
 							}
-							db_insert_fotos_tag($tagId, $bildId);
 						}
-					}
 
-					setValue('css_class_meldung', "meldung");
-					setValue('meldung', "Ihr Bild wurde hochgeladen.");
+						setValue('css_class_meldung', "meldung");
+						setValue('meldung', "Ihr Bild wurde hochgeladen.");
+					} else{
+						unlink($tmp_path);
+						setDefaultError();
+					}
 				} else {
 //				Falls die hochgeladene Datei kein Bild ist, wird sie wider aus dem Temporären Verzeichniss gelöscht.
 					unlink($tmp_path);
@@ -257,10 +276,6 @@ function fotos() {
 	} else{
 		setValue('css_class_meldung', "fehler");
 		setValue('meldung', "Sie müssen zuerst ein Album erstellen.");
-	}
-	
-	if (isset($_REQUEST["senden_löschen"])){
-		print "OK";
 	}
     // Template abfüllen und Resultat zurückgeben
     setValue('phpmodule', $_SERVER['PHP_SELF']."?id=".__FUNCTION__);

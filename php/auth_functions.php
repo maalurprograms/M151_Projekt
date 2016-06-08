@@ -12,21 +12,21 @@
  */
 function registration() {
     // Der Schaltknopf "senden" wurde betätigt
-    if (isset($_REQUEST['senden'])) {
+    if (isset($_POST['senden'])) {
 		$fehlermeldung = checkRegistration();
 		// Wenn ein Fehler aufgetreten ist
         if (strlen($fehlermeldung) > 0) {
 			setValue('css_class_meldung',"fehler");
 			setValue('meldung', $fehlermeldung);
-            setValues($_REQUEST);
+            setValues($_POST);
 		// Wenn alles ok
         } else {
-            db_insert_benutzer($_REQUEST, passwordHash($_REQUEST['passwort']));
+            db_insert_benutzer($_POST, passwordHash($_POST['passwort']));
 			setValue('css_class_meldung',"meldung");
 			setValue('meldung', "Registration erfolgreich. Bitte melden Sie sich an.");
         }
     // Der Schaltknopf "abbrechen" wurde betätigt
-    } else if (isset($_REQUEST['abbrechen'])) {
+    } else if (isset($_POST['abbrechen'])) {
 		redirect(__FUNCTION__);
 		exit;
     }
@@ -40,7 +40,7 @@ function registration() {
  */
 function login() {
 	// Es wurde auf die Schaltfläche "senden" geklickt
-	if (isset($_REQUEST['senden'])) {
+	if (isset($_POST['senden'])) {
 		$benutzerId = checkLoginGetId();
 		if ($benutzerId > 0) {
 			setSessionValue("benutzerId", $benutzerId);
@@ -49,7 +49,7 @@ function login() {
 			exit;
 		} else {
 			unset($_SESSION['benutzerId']);
-			setValues($_REQUEST);
+			setValues($_POST);
 			setValue('css_class_meldung',"fehler");
 			setValue('meldung', "E-Mail-Passwortkombination konnte nicht gefunden werden. Bitte Eingaben korrigieren oder Registration benutzen.");
 		}
@@ -95,18 +95,22 @@ function emailExists($email) {
 function checkRegistration() {
     global $css_classes;
 	$fehlermeldung = "";
-    if (!CheckEmailFormat($_REQUEST['email'])) {
+    if (!CheckEmailFormat($_POST['email'])) {
         $css_classes['email'] = getValue('cfg_css_class_error');
 		$fehlermeldung .= "Falsches Format E-Mail. ";
-    } elseif (emailExists($_REQUEST['email'])) {
+    } elseif (emailExists($_POST['email'])) {
         $css_classes['email'] = getValue('cfg_css_class_error');
 		$fehlermeldung .= "Diese E-Mail Adresse ist bereits vorhanden. ";
-	}
-    if (!CheckPasswordFormat($_REQUEST['passwort'])) {
+	}elseif (!CheckName($_POST["vorname"]))	{
+		$css_classes['passwort'] = getValue('cfg_css_class_error');
+		$fehlermeldung .= "Bitte geben Sie Ihren Vornamen ein.";
+	}elseif (!CheckName($_POST["nachname"])){
+		$css_classes['passwort'] = getValue('cfg_css_class_error');
+		$fehlermeldung .= "Bitte geben Sie Ihren Nachnamen ein.";
+	}elseif (!CheckPasswordFormat($_POST['passwort'])) {
         $css_classes['passwort'] = getValue('cfg_css_class_error');
 		$fehlermeldung .= "Falsches Format Passwort. Mindestens: 1 Kleinbuchstaben, 1 Grossbuchstaben, 1 Sonderzeichen  und 8 bis 20 Zeichen lang.";
-    }
-    if (!CheckPasswordCompare($_REQUEST['passwort'], $_REQUEST['passwort2'])) {
+    }elseif (!CheckPasswordCompare($_POST['passwort'], $_POST['passwort2'])) {
         $css_classes['passwort'] = getValue('cfg_css_class_error');
         $css_classes['passwort2'] = getValue('cfg_css_class_error');
 		$fehlermeldung .= "Die beiden Passwörter stimmen nicht überein. ";
@@ -119,11 +123,11 @@ function checkRegistration() {
  */
 function checkLoginGetId() { 
 	// E-Mail ist ein Unique-Attribut in der DB, deshalb gibt Abfrage max. 1.jpg Datensatz zurück
-	$resultat = getBenutzerDaten($_REQUEST['email']);
+	$resultat = getBenutzerDaten($_POST['email']);
 	if (empty($resultat)) {
 		return 0;
 	// Vergleich, ob beide Passwörter identisch
-	} elseif (password_verify($_REQUEST['passwort'], $resultat[0]['passwort'])) {
+	} elseif (password_verify($_POST['passwort'], $resultat[0]['passwort'])) {
 		return $resultat[0]['bid'];
 	} else return 0;
 }

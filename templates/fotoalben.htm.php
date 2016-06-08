@@ -1,4 +1,7 @@
 <div id="content">
+    <p class="<?php echo getValue('css_class_meldung'); ?>">
+        <?php echo getValue('meldung')."&nbsp;"; ?>
+    </p>
     <form id="search" name="fotoalben" action="<?php echo getValue('phpmodule'); ?>" method="post">
         <input class="search_bar" name="search_tags" placeholder="Geben Sie hier ( mit ';' getrennt ) Tags ein" style="text-align: center; width: 400px" required>
         <input type="hidden" name="senden_suche">
