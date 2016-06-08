@@ -12,7 +12,8 @@
             ?>
         </select><br>
         <input type="text" name="tags" placeholder="Tags mit ';' getrennt eingeben."><br>
-        <input type="submit" value="Upload Image" name="senden">
+        <input type="text" hidden name="senden">
+        <input class="safe_button" type="image" src="../icons/ok.png">
     </form>
     <p class="<?php echo getValue('css_class_meldung'); ?>">
         <?php echo getValue('meldung')."&nbsp;"; ?>
