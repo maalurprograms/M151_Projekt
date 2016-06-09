@@ -7,7 +7,6 @@
  *
  */
 
-
 /*
  * Beinhaltet die Anwendungslogik zur Registration
  */
