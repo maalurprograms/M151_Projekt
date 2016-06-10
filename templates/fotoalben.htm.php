@@ -65,9 +65,12 @@
                 <div class='album'>
                 <p class='title'>Ihre Tags:</p>
                 <p>";
-
-            foreach (db_get_all_tags_from_benutzer($_SESSION["benutzerId"]) as $t){
-                $html.=$t["name"].", ";
+//          Dann werden noch alle Tags des Benutzers ausgegeben.
+            $tagsFromUser = db_get_all_tags_from_benutzer($_SESSION["benutzerId"]);
+            if ($tagsFromUser) {
+                foreach ($tagsFromUser as $t) {
+                    $html .= $t["name"] . ", ";
+                }
             }
 
             $html .= "</p></div>";

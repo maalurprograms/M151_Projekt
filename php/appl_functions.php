@@ -73,7 +73,7 @@ function fotoalben() {
 
 	if(isset($_POST['delete_foto_id'])){
 		if (isCleanNumber($_POST['delete_foto_id'])) {
-			if (db_check_foto_from_benutzer($_POST["delete_foto_id"])) {
+			if (db_check_foto_from_benutzer($_POST["delete_foto_id"], $_SESSION["benutzerId"])) {
 //			Wenn das Foto zum löschen überhaupt dem angemeldeten User gehört, 
 //			wird es gelöscht.
 				deleteFoto($_POST["delete_foto_id"]);
@@ -96,6 +96,7 @@ function fotoalben() {
 				}
 			}
 		} else{
+//			Wenn der Benutzer das Html manuel abgeändert hat dann wird ein Fehler ausgegeben da wir ansonsten nicht wissen was wir jetz löschen.
 			setDefaultError();
 		}
 	}

@@ -4,7 +4,7 @@
         <input type="file" name="bild" required><br>
         Zu welcher Gallerie soll das Bild hinzugefügt werden?
         <select name="gallerieId" required>
-<!--            Generiere Auswahl der gallerie-->
+<!--        Generiere Auswahl der gallerie-->
             <?php
                 foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $gallerie){
                     print "<option id='".$gallerie["aid"]."' value='".$gallerie["aid"]."'>".$gallerie["name"]."</option>";

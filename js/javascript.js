@@ -53,15 +53,19 @@ $(window).ready(function () {
         // Danach wird ein submit auf das Delete_Foto form ausgeführt.
         $(".delete_button").click(function () {
             if (confdel("dieses Bild")){
+                // Wenn der Benutzer im Alertfenster auf Ok geklickt hat, wird das Delete Form submitted.
                 $("#"+$(this).parent().attr("id")+" .delete_foto").submit()
             }
         })
         
     })
-    
+
+    // Wenn auf das löschen icon geklickt wird, kommt eine Bestätigungsfrage.
+    // Danach wird ein submit auf das Delete_Album form ausgeführt.
     $(".delete_album_button").click(function () {
         var albumId = $(this).attr("id").split("_")[3]
         if (confdel("dieses Album ("+ $("#"+albumId+"_album .title").text()+")")){
+            // Wenn der Benutzer im Alertfenster auf Ok geklickt hat, wird das Delete Form submitted.
             $("#delete_album_form_"+albumId).submit();
         }
     })
