@@ -36,7 +36,7 @@ function deleteFoto($fid){
 	unlink("../images/thumbnails/$fid");
 }
 
-function deleteAlbum($aid){
+function deleteAlbumDependencies($aid){
 	if(db_get_fotos_from_album($aid)) {
 		foreach (db_get_fotos_from_album($aid) as $f) {
 			unlink("../images/" . $f["fid"]);
@@ -89,10 +89,9 @@ function fotoalben() {
 		if (isCleanNumber($_POST['delete_album_id'])) {
 			foreach (db_get_alben_from_benutzer($_SESSION["benutzerId"]) as $v) {
 				if ($v["aid"] == $_POST["delete_album_id"]) {
-					deleteAlbum($_POST["delete_album_id"]);
+					deleteAlbumDependencies($_POST["delete_album_id"]);
 					db_delete_album($_POST["delete_album_id"]);
-					setValue('phpmodule', $_SERVER['PHP_SELF'] . "?id=" . __FUNCTION__);
-					return runTemplate("../templates/fotoalben.htm.php");
+					$alben = db_get_alben_from_benutzer($_SESSION["benutzerId"]);
 				}
 			}
 		} else{
